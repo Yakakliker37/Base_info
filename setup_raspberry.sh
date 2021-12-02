@@ -277,7 +277,7 @@ menu =  "$VAR05"
 title = "$VAR06"
 host = "$VAR07"
 alerts = hostdown
-" >> Targets.$VAR08
+" >> $VAR02/config.d/Targets.$VAR08
 fct001 | sudo -S rm $VAR02/config.d/Targets
 fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
 
@@ -340,7 +340,7 @@ fct001 | sudo -S echo "
 "$VAR10" "$VAR09"
 menu =  "$VAR05" 
 title = "$VAR06"
-" >> Targets.$VAR08
+" >> $VAR02/config.d/Targets.$VAR08
 fct001 | sudo -S rm $VAR02/config.d/Targets
 fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
 

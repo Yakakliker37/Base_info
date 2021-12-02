@@ -12,8 +12,8 @@ function fct007 {
 
 ## Configuration d'un host
 
-sudo -S chmod 777 $VAR02/config.d/Targets
-$VAR01 --title "Targets" --textbox $VAR02/config.d/Targets 12 80
+#sudo -S chmod 777 $VAR02/config.d/Targets
+#$VAR01 --title "Targets" --textbox $VAR02/config.d/Targets 12 80
 
 VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 ++ --title "Niveau" 3>&1 1>&2 2>&3)
 VAR05=$($VAR01 --inputbox "Menu ?" 8 39 Menu --title "Menu" 3>&1 1>&2 2>&3)
@@ -21,22 +21,23 @@ VAR06=$($VAR01 --inputbox "Titre ?" 8 39 Titre --title "Titre" 3>&1 1>&2 2>&3)
 VAR07=$($VAR01 --inputbox "Adresse IP du Host ?" 8 39 192.168.1.1 --title "Host" 3>&1 1>&2 2>&3)
 
 
-fct001 | sudo -S cp $VAR02/config.d/Targets $VAR02/config.d/Targets.$VAR08
-sudo -S chmod 777 $VAR02/config.d/Targets.$VAR08
+#fct001 | sudo -S cp $VAR02/config.d/Targets $VAR02/config.d/Targets.$VAR08
+#sudo -S chmod 777 $VAR02/config.d/Targets.$VAR08
 VAR09=`date +%s`
 fct001 | sudo -S echo "
 "$VAR10" "$VAR09"
-menu =  "$VAR05" 
+menu = "$VAR05" 
 title = "$VAR06"
 host = "$VAR07"
 alerts = hostdown
-" >> Targets.$VAR08
-fct001 | sudo -S rm $VAR02/config.d/Targets
-fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
+" >> Targets
+
+#fct001 | sudo -S rm $VAR02/config.d/Targets
+#fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
 
 
 fct008
-fct001 | sudo -S systemctl reload smokeping
+#fct001 | sudo -S systemctl reload smokeping
 }
 
 function fct008 {
@@ -77,8 +78,8 @@ function fct009 {
 
 ## Configuration d'un menu
 
-sudo -S chmod 777 $VAR02/config.d/Targets
-$VAR01 --title "Targets" --textbox $VAR02/config.d/Targets 12 80
+#sudo -S chmod 777 $VAR02/config.d/Targets
+#$VAR01 --title "Targets" --textbox $VAR02/config.d/Targets 12 80
 
 VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 ++ --title "Niveau" 3>&1 1>&2 2>&3)
 VAR05=$($VAR01 --inputbox "Menu ?" 8 39 Menu --title "Menu" 3>&1 1>&2 2>&3)
@@ -86,19 +87,22 @@ VAR06=$($VAR01 --inputbox "Titre ?" 8 39 Titre --title "Titre" 3>&1 1>&2 2>&3)
 #VAR07=$($VAR01 --inputbox "Adresse IP du Host ?" 8 39 192.168.1.1 --title "Host" 3>&1 1>&2 2>&3)
 
 
-fct001 | sudo -S cp $VAR02/config.d/Targets $VAR02/config.d/Targets.$VAR08
-sudo -S chmod 777 $VAR02/config.d/Targets.$VAR08
+#fct001 | sudo -S cp $VAR02/config.d/Targets $VAR02/config.d/Targets.$VAR08
+#sudo -S chmod 777 $VAR02/config.d/Targets.$VAR08
 VAR09=`date +%s`
 fct001 | sudo -S echo "
 "$VAR10" "$VAR09"
-menu =  "$VAR05" 
+menu = "$VAR05" 
 title = "$VAR06"
-" >> Targets.$VAR08
-fct001 | sudo -S rm $VAR02/config.d/Targets
-fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
+" >> Targets
+
+
+
+#fct001 | sudo -S rm $VAR02/config.d/Targets
+#fct001 | sudo -S cp $VAR02/config.d/Targets.$VAR08 $VAR02/config.d/Targets
 
 fct008
-fct001 | sudo -S systemctl reload smokeping
+#fct001 | sudo -S systemctl reload smokeping
 }
 
 
