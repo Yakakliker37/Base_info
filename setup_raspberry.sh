@@ -203,6 +203,109 @@ fct001 | sudo -S cp Alerts /etc/smokeping/config.d/Alerts
 $VAR01 --title "/etc/smokeping/config.d/Alerts" --textbox /etc/smokeping/config.d/Alerts 40 80
 fct001 | sudo -S rm Alerts
 
+cd ~
+fct001 | sudo -S mv /etc/smokeping/config.d/Probes /etc/smokeping/config.d/Probes.inst
+fct001 | sudo -S echo "
+*** Probes ***
+
++ FPing
+
+binary = /usr/bin/fping
+#packetsize = 500
+
+hostinterval = 1.5
+mininterval = 0.001
+offset = 50%
+timeout = 1.5
+step = 300
+pings = 20
+
+ # these expect to find echoping in /usr/bin
+ # if not, you'll have to specify the location separately for each probe
+ # + EchoPing         # uses TCP or UDP echo (port 7)
+ # + EchoPingDiscard  # uses TCP or UDP discard (port 9)
+ # + EchoPingChargen  # uses TCP chargen (port 19)
+ + EchoPingSmtp       # SMTP (25/tcp) for mail servers
+
+ + EchoPingHttps      # HTTPS (443/tcp) for web servers
+
+binary = /usr/bin/echoping
+ forks = 5
+ offset = 50%
+ step = 300
+
+ # The following variables can be overridden in each target section
+accept_redirects = yes
+# extraopts = -some-letter-the-author-did-not-think-of
+# ignore_cache = yes
+# ipversion = 4
+# pings = 20
+port = 37443
+# priority = 6
+# prot = 3443
+# revalidate_data = no
+# timeout = 20
+# tos = 0xa0
+# url = /
+# waittime = 1
+
+
+ + EchoPingHttp       # HTTP (80/tcp) for web servers and caches
+
+ binary = /usr/bin/echoping
+ forks = 5
+ offset = 50%
+ step = 300
+timeout = 10
+
+
+ # The following variables can be overridden in each target section
+ accept_redirects = yes
+ port = 80
+
+ 
+ + EchoPingIcp        # ICP (3130/udp) for caches
+ # these need at least echoping 6 with the corresponding plugins
+
+ binary = /usr/bin/echoping
+ forks = 5
+ offset = 50%
+ step = 300
+
+ # The following variables can be overridden in each target section
+ extraopts = -some-letter-the-author-did-not-think-of
+ ipversion = 4
+ pings = 20
+ priority = 6
+ timeout = 5
+ tos = 0xa0
+ url = http://www.example.org/ # mandatory
+ waittime = 1
+
+
+ + EchoPingDNS        # DNS (53/udp or tcp) servers
+ + EchoPingLDAP       # LDAP (389/tcp) servers
+ + EchoPingWhois      # Whois (43/tcp) servers
+
+#++ FPingNormal
+#offset = 0%
+
+
+#++ FPingLarge
+#packetsize = 5000
+#offset = 50%
+
++ Curl
+ # probe-specific variables
+ binary = /usr/bin/curl
+ step = 60
+ 
+ # a default for this target-specific variable
+ urlformat = http://%host%/ " >> Probes
+fct001 | sudo -S cp Probes /etc/smokeping/config.d/Probes
+$VAR01 --title "/etc/smokeping/config.d/Probes" --textbox /etc/smokeping/config.d/Probes 40 80
+fct001 | sudo -S rm Probes
+
 
 fct001 | sudo -S systemctl restart postfix
 fct001 | sudo -S systemctl restart smokeping
