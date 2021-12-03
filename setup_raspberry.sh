@@ -520,7 +520,32 @@ function fct001 {
 ## Update & synchronisation de l'horloge avant toute nouvelle installation
 clear
 fct001 | sudo -S apt-get update
-menu001
+#menu001
+fct002
+fct003
+fct005
+util001
+util002
+util003
+util004
+util005
+util006
+util007
+util008
+util009
+util010
+util011
+util012
+util013
+util014
+util015
+util016
+util017
+fct004
+fct008
+
+
+
 
 ## Fin du script
 
