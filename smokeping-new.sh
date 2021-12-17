@@ -38,9 +38,9 @@ function fct001 {
 #----------------------------------------
 # Appel fonctions
 
-#wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/connexion-ssh.sh
+wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/connexion-ssh.sh
 
-#fct001 | sudo -S chmod +x connexion-ssh.sh
+fct001 | sudo -S chmod +x connexion-ssh.sh
 
 ./connexion-ssh.sh $VAR05 $VAR06 $VAR09
 
