@@ -1,4 +1,7 @@
 #!/bin/bash
+## Script de configuration permettant d'ajouter des menus et des hosts sur smokeping
+##
+
 
 ## Les variables
 : ${VAR01=whiptail}
@@ -30,7 +33,7 @@ fct008
 function fct008 {
 # choix
 
-if ($VAR01 --title "Paramétrages" --yesno "Souhaites-tu ajouter un paramètre Smokeping ?" 10 60) then
+if ($VAR01 --title "Paramétrages" --yesno "Souhaitez-vous ajouter un paramètre à Smokeping ?" 10 60) then
 exitstatus=$?
 		if [ $exitstatus = 0 ]; then
 
@@ -71,7 +74,7 @@ function fct009 {
 
 ## Configuration d'un menu
 
-VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 ++ --title "Niveau" 3>&1 1>&2 2>&3)
+VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 + --title "Niveau" 3>&1 1>&2 2>&3)
 VAR05=$($VAR01 --inputbox "Menu & Titre ?" 8 39 --title "Menu" 3>&1 1>&2 2>&3)
 VAR09=`date +%s`
 
@@ -87,15 +90,16 @@ fct008
 
 
 function fct010 {
-VAR12=$($VAR01 --inputbox "Nom du fichier de configuration" 8 39 Targets --title "Fichier" 3>&1 1>&2 2>&3)
+#VAR12=$($VAR01 --inputbox "Nom du fichier de configuration" 8 39 Targets --title "Fichier" 3>&1 1>&2 2>&3)
 
+VAR12=Targets.$VAR08
 fct001 | sudo -S cp $VAR02/config.d/Targets $VAR12
 
 }
 
 # Lancement des menus
 
-if ($VAR01 --title "Paramétrages" --yesno "Souhaites-tu paramétrer Smokeping ?" 10 60) then
+if ($VAR01 --title "Paramétrages" --yesno "Souhaitez-vous paramétrer Smokeping ?" 10 60) then
 
 PASSWORD=$($VAR01 --title "Mot de passe Sudo" --passwordbox "Entrez votre mot de passe" 10 60 3>&1 1>&2 2>&3)
  
@@ -126,5 +130,5 @@ fct008
 		$VAR01 --title "Fin" --msgbox "Fin du script" 10 60
 	fi
 
-
+## Yakakliker
 

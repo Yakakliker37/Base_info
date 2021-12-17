@@ -1,5 +1,14 @@
 #!/bin/bash
 
+##
+## Script d'installation & de paramétrage de Smokeping
+## Fait les updates
+## Installe quelques utilitaires réseau
+## Installe Webmin pour aider la configuration réseau multiple (https://Adresse_IP:10000)
+## Installe Smokeping
+## Configure les envois d'alerte
+##
+
 ## Les variables
 : ${VAR01=whiptail}
 : ${VAR02=/etc/smokeping}
@@ -17,6 +26,7 @@ if ($VAR01 --title "NTPDATE" --yesno "Souhaites-tu installer NTPDATE et synchron
 else
     echo "Pas de synchronisation de l'horloge."
 fi
+fct001 | sudo -S apt-get update
 fct001 | sudo -S apt-get dist-upgrade -y
 $VAR01 --title "That's all folks !" --msgbox "Fin des mises à jour, pensez à redémarrer !" 8 78
 }
@@ -352,36 +362,7 @@ fct001 | sudo -S chmod +x dwagent_x86.sh
 ./dwagent_x86.sh
 }
 
-## Configuration de Proxmox
 
-function fct006 {
-clear
-
-HOST01=$($VAR01 --inputbox "Hostname du serveur 01" 8 39 PVE01 --title "Hostname" 3>&1 1>&2 2>&3)
-HOST02=$($VAR01 --inputbox "Hostname du serveur 02" 8 39 PVE02 --title "Hostname" 3>&1 1>&2 2>&3)
-HOST03=$($VAR01 --inputbox "Hostname du serveur 03" 8 39 PVE03 --title "Hostname" 3>&1 1>&2 2>&3)
-DOMAIN=$($VAR01 --inputbox "Nom du domaine Proxmox" 8 39 Proxmox.lan --title "Domaine" 3>&1 1>&2 2>&3)
-IP001=$($VAR01 --inputbox "Adresse IP de $HOST01" 8 39 192.168.10.11 --title "Réseau" 3>&1 1>&2 2>&3)
-IP002=$($VAR01 --inputbox "Adresse IP de $HOST02" 8 39 192.168.10.12 --title "Réseau" 3>&1 1>&2 2>&3)
-IP003=$($VAR01 --inputbox "Adresse IP de $HOST03" 8 39 192.168.10.13 --title "Réseau" 3>&1 1>&2 2>&3)
-
-
-exitstatus=$?
-if [ $exitstatus = 0 ]; then
-
-fct001 | sudo -S echo $IP001     $HOST01.$DOMAIN    $HOST01 >> /etc/hosts
-fct001 | sudo -S echo $IP002     $HOST02.$DOMAIN    $HOST02 >> /etc/hosts
-fct001 | sudo -S echo $IP003     $HOST03.$DOMAIN    $HOST0 >> /etc/hosts
-
-$VAR01 --title "/etc/hosts" --textbox /etc/hosts 12 80
-
-else
-    echo "Cancel."
-fi
-
-echo "(Exit status was $exitstatus)"
-
-}
 
 function fct007 {
 
@@ -455,7 +436,7 @@ function fct009 {
 sudo -S chmod 777 $VAR02/config.d/Targets
 $VAR01 --title "Targets" --textbox $VAR02/config.d/Targets 12 80
 
-VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 ++ --title "Niveau" 3>&1 1>&2 2>&3)
+VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 + --title "Niveau" 3>&1 1>&2 2>&3)
 VAR05=$($VAR01 --inputbox "Menu ?" 8 39 Menu --title "Menu" 3>&1 1>&2 2>&3)
 VAR06=$($VAR01 --inputbox "Titre ?" 8 39 Titre --title "Titre" 3>&1 1>&2 2>&3)
 #VAR07=$($VAR01 --inputbox "Adresse IP du Host ?" 8 39 192.168.1.1 --title "Host" 3>&1 1>&2 2>&3)
@@ -677,7 +658,6 @@ fct004
 		$VAR01 --title "Fin" --msgbox "Fin du script" 10 60
 	fi
 	
-#$VAR01 --title "Fin" --msgbox "Fin du script" 10 60
-
+## Yakakliker
 
 
