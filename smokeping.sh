@@ -21,7 +21,7 @@ VAR05=$($VAR01 --inputbox "Menu & Titre ?" 8 39 --title "Menu" 3>&1 1>&2 2>&3)
 VAR07=$($VAR01 --inputbox "Adresse IP du Host ?" 8 39 --title "Host" 3>&1 1>&2 2>&3)
 VAR09=`date +%s`
 
-echo "
+fct001 | sudo -S echo "
 "$VAR10" "$VAR09"
 menu = "$VAR05" 
 title = "$VAR05" "$VAR07"
@@ -79,7 +79,7 @@ VAR10=$($VAR01 --inputbox "Niveau ?" 8 39 + --title "Niveau" 3>&1 1>&2 2>&3)
 VAR05=$($VAR01 --inputbox "Menu & Titre ?" 8 39 --title "Menu" 3>&1 1>&2 2>&3)
 VAR09=`date +%s`
 
-echo "
+fct001 | sudo -S echo "
 #---------------------------
 "$VAR10" "$VAR09"
 menu = "$VAR05" 
@@ -95,6 +95,7 @@ function fct010 {
 
 VAR12=Targets.$VAR08
 fct001 | sudo -S cp $VAR02/config.d/Targets $VAR12
+fct001 | sudo -S chmod 777 $VAR12
 
 }
 
