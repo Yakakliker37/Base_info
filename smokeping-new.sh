@@ -18,9 +18,9 @@
 
 if ($VAR01 --title "Paramétrages" --yesno "Souhaitez-vous paramétrer Smokeping ?" 10 60) then
 
-PASSWORD=$($VAR01 --title "Mot de passe Sudo" --passwordbox "Entrez votre mot de passe" 10 60 3>&1 1>&2 2>&3)
+PASSWORD=$($VAR01 --title "Mot de passe Sudo" --passwordbox "Entrez votre mot de passe Sudo" 10 60 3>&1 1>&2 2>&3)
 
-VAR05=$($VAR01 --title "Adresse IP" --inputbox "Entrez l'adresse IP du serveur" 10 60 3>&1 1>&2 2>&3)
+VAR05=$($VAR01 --title "Adresse IP" --inputbox "Entrez l'adresse IP du serveur distant" 10 60 3>&1 1>&2 2>&3)
 
 VAR06=$($VAR01 --title "User" --inputbox "Entrez le nom d'utilisateur" 10 60 3>&1 1>&2 2>&3)
 
