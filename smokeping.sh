@@ -1,6 +1,7 @@
 #!/bin/bash
+#------------------------------------------------------------------------------------
 ## Script de configuration permettant d'ajouter des menus et des hosts sur smokeping
-##
+#------------------------------------------------------------------------------------
 
 
 ## Les variables
@@ -125,7 +126,6 @@ fct008
 	fi
 
 	else
-	fct001 | sudo -S systemctl reload smokeping
 	
 		$VAR01 --title "Fin" --msgbox "Fin du script" 10 60
 	fi

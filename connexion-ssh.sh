@@ -14,23 +14,23 @@ expect "password:"
 
 send "$password\r";
 
-expect "administrateur@smoke:"
+expect "administrateur@"
 
 send "wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/smokeping.sh\r"
 
-expect "administrateur@smoke:"
+expect "administrateur@"
 
 send "ls\r"
 
-expect "administrateur@smoke:"
+expect "administrateur@"
 
 send "sudo chmod +x smokeping.sh\r"
 
-expect "[sudo] password for administrateur:"
+expect "password"
 
 send "$password\r";
 
-expect "administrateur@smoke:"
+expect "administrateur@"
 
 send "./smokeping.sh\r"
 
