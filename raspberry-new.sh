@@ -38,9 +38,9 @@ function fct001 {
 #----------------------------------------
 # Appel fonctions
 
-wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/setup_raspberry.sh
+wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/connexion-rasp.sh
 
-fct001 | sudo -S chmod +x setup_raspberry.sh
+fct001 | sudo -S chmod +x connexion-rasp.sh
 
 ./connexion-ssh.sh $VAR05 $VAR06 $VAR09
 
