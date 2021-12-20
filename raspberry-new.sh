@@ -16,7 +16,7 @@
 
 # Lancement des menus
 
-if ($VAR01 --title "Paramétrages" --yesno "Souhaitez-vous paramétrer Smokeping ?" 10 60) then
+if ($VAR01 --title "Paramétrages" --yesno "Souhaitez-vous paramétrer le raspberry ?" 10 60) then
 
 PASSWORD=$($VAR01 --title "Mot de passe Sudo" --passwordbox "Entrez votre mot de passe Sudo" 10 60 3>&1 1>&2 2>&3)
 
@@ -42,7 +42,7 @@ wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/connexion-ras
 
 fct001 | sudo -S chmod +x connexion-rasp.sh
 
-./connexion-ssh.sh $VAR05 $VAR06 $VAR09
+./connexion-rasp.sh $VAR05 $VAR06 $VAR09
 
 
 #----------------------------------------
