@@ -14,15 +14,15 @@ expect "password:"
 
 send "$password\r";
 
-expect "administrateur@"
+expect "pi@"
 
 send "https://raw.githubusercontent.com/Yakakliker37/Base_info/main/setup_raspberry.sh\r"
 
-expect "administrateur@"
+expect "pi@"
 
 send "ls\r"
 
-expect "administrateur@"
+expect "pi@"
 
 send "sudo chmod +x setup_raspberry.sh\r"
 
@@ -30,7 +30,7 @@ expect "password"
 
 send "$password\r";
 
-expect "administrateur@"
+expect "pi@"
 
 send "./setup_raspberry.sh\r"
 
