@@ -16,7 +16,7 @@ send "$password\r";
 
 expect "pi@"
 
-send "https://raw.githubusercontent.com/Yakakliker37/Base_info/main/setup_raspberry.sh\r"
+send "wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/setup_raspberry.sh\r"
 
 expect "pi@"
 
