@@ -59,14 +59,14 @@ expect "6100(config-vlan-255)#"
 send "description Vlan0255\r"
 expect "6100(config-vlan-255)#"
 
-send "interface 1/1/2-1/1/48\r"
-expect "6100(config-if-<1/1/2-1/1/48>)#"
+send "interface 1/1/2-1/1/52\r"
+expect "6100(config-if-<1/1/2-1/1/52>)#"
 
 send "vlan trunk native 1\r"
-expect "6100(config-if-<1/1/2-1/1/48>)#"
+expect "6100(config-if-<1/1/2-1/1/52>)#"
 
-send "vlan trunk allowed 2,10,11\r"
-expect "6100(config-if-<1/1/2-1/1/48>)#"
+send "vlan trunk allowed 1,2,10,11\r"
+expect "6100(config-if-<1/1/2-1/1/52>)#"
 
 send "exit\r"
 expect "6100(config)#"
