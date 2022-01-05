@@ -10,6 +10,12 @@ set password [lindex $argv 2]
 
 set nom [lindex $argv 3]
 
+set gw [lindex $argv 4]
+
+set dns1 [lindex $argv 5]
+
+set dns2 [lindex $argv 6]
+
 spawn ssh "$user\@$ip"
 expect "password:"
 
@@ -22,10 +28,34 @@ expect "#"
 send "hostname $nom\r"
 expect "#"
 
+send "ntp server pool.ntp.org minpoll 4 maxpoll 4 iburst\r"
+expect "#"
+
+send "ntp enable\r"
+expect "#"
+
+send "spanning-tree\r"
+expect "#"
+
+send "ip dns server $dns1\r"
+expect "#"
+
+send "ip dns server $dns2\r"
+expect "#"
+
+send "ip route 0.0.0.0/0 $gw\r"
+expect "#"
+
 send "ip dns server-address 8.8.8.8\r"
 expect "#"
 
 send "ip dns server-address 8.8.4.4\r"
+expect "#"
+
+send "interface vlan 1\r"
+expect "#"
+
+send "no ip dhcp\r"
 expect "#"
 
 send "vlan 2\r"
