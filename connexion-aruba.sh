@@ -16,7 +16,7 @@ set dns1 [lindex $argv 5]
 
 set dns2 [lindex $argv 6]
 
-spawn ssh "$user\@$ip"
+spawn ssh -o "StrictHostKeyChecking no" "$user\@$ip"
 expect "password:"
 
 send "$password\r";
@@ -37,19 +37,13 @@ expect "#"
 send "spanning-tree\r"
 expect "#"
 
-send "ip dns server $dns1\r"
-expect "#"
-
-send "ip dns server $dns2\r"
-expect "#"
-
 send "ip route 0.0.0.0/0 $gw\r"
 expect "#"
 
-send "ip dns server-address 8.8.8.8\r"
+send "ip dns server-address $dns1\r"
 expect "#"
 
-send "ip dns server-address 8.8.4.4\r"
+send "ip dns server-address $dns2\r"
 expect "#"
 
 send "interface vlan 1\r"
