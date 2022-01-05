@@ -26,6 +26,7 @@ VAR06=$($VAR01 --title "User" --inputbox "Entrez le nom d'utilisateur" 10 60 3>&
 
 VAR09=$($VAR01 --title "Password" --passwordbox "Entrez le mot de passe utilisateur" 10 60 3>&1 1>&2 2>&3)
 
+VAR10=$($VAR01 --title "Host" --inputbox "Entrez le Hostname" 10 60 3>&1 1>&2 2>&3)
  
 exitstatus=$?
 		if [ $exitstatus = 0 ]; then
@@ -42,7 +43,7 @@ wget https://raw.githubusercontent.com/Yakakliker37/Base_info/main/connexion-aru
 
 fct001 | sudo -S chmod +x connexion-aruba.sh
 
-./connexion-aruba.sh $VAR05 $VAR06 $VAR09
+./connexion-aruba.sh $VAR05 $VAR06 $VAR09 $VAR10
 
 
 #----------------------------------------

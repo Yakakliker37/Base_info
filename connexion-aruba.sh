@@ -8,104 +8,109 @@ set user [lindex $argv 1]
 
 set password [lindex $argv 2]
 
+set nom [lindex $argv 3]
+
 spawn ssh "$user\@$ip"
 expect "password:"
 
 send "$password\r";
-expect "6100#"
+expect "#"
 
 send "config\r"
-expect "6100(config)#"
+expect "#"
+
+send "hostname $nom\r"
+expect "#"
 
 send "ip dns server-address 8.8.8.8\r"
-expect "6100(config)#"
+expect "#"
 
 send "ip dns server-address 8.8.4.4\r"
-expect "6100(config)#"
+expect "#"
 
 send "vlan 2\r"
-expect "6100(config-vlan-2)#"
+expect "#"
 
 send "description Isis\r"
-expect "6100(config-vlan-2)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-2)#"
+expect "#"
 
 send "vlan 10\r"
-expect "6100(config-vlan-10)#"
+expect "#"
 
 send "description Video\r"
-expect "6100(config-vlan-10)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-10)#"
+expect "#"
 
 send "vlan 11\r"
-expect "6100(config-vlan-11)#"
+expect "#"
 
 send "description Intrusion\r"
-expect "6100(config-vlan-11)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-11)#"
+expect "#"
 
 send "vlan 200\r"
-expect "6100(config-vlan-200)#"
+expect "#"
 
 send "description Wifi_Prive\r"
-expect "6100(config-vlan-200)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-200)#"
+expect "#"
 
 send "vlan 300\r"
-expect "6100(config-vlan-300)#"
+expect "#"
 
 send "description Wifi_Public\r"
-expect "6100(config-vlan-300)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-300)#"
+expect "#"
 
 send "vlan 253\r"
-expect "6100(config-vlan-253)#"
+expect "#"
 
 send "description Vlan0253\r"
-expect "6100(config-vlan-253)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-253)#"
+expect "#"
 
 send "vlan 255\r"
-expect "6100(config-vlan-255)#"
+expect "#"
 
 send "description Vlan0255\r"
-expect "6100(config-vlan-255)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-vlan-255)#"
+expect "#"
 
 send "interface 1/1/2-1/1/52\r"
-expect "6100(config-if-<1/1/2-1/1/52>)#"
+expect "#"
 
 send "vlan trunk native 1\r"
-expect "6100(config-if-<1/1/2-1/1/52>)#"
+expect "#"
 
 send "vlan trunk allowed 1,2,10,11\r"
-expect "6100(config-if-<1/1/2-1/1/52>)#"
+expect "#"
 
 send "no shutdown\r"
-expect "6100(config-if-<1/1/2-1/1/52>)#"
+expect "#"
 
 send "exit\r"
-expect "6100(config)#"
+expect "#"
 
 send "wr memory \r"
-expect "6100(config)#"
+expect "#"
 
 send "exit\r"
-expect "6100#"
+expect "#"
 
 send "exit\r"
 
