@@ -7,7 +7,7 @@
 
 #####################################################
 fct001(){
-fct000 | sudo apt-get update -y
+sudo apt-get update -y
 
 sudo curl -s https://install.zerotier.com | sudo bash
 }
