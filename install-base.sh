@@ -32,6 +32,8 @@ fct002(){
 sudo apt-get install build-essential linux-headers-$(uname -r)
 sudo apt-get install net-tools
 sudo apt-get install rkhunter
+curl -O https://raw.githubusercontent.com/Yakakliker37/Base_info/main/Zerotier.sh
+
 
 
 }
@@ -40,8 +42,6 @@ sudo apt-get install rkhunter
 ########################################################
 fct003(){
 sudo curl -s https://install.zerotier.com | sudo bash
-curl -O Zerotier.sh https://raw.githubusercontent.com/Yakakliker37/Base_info/main/Zerotier.sh
-sh Zerotier.sh
 
 }
 
