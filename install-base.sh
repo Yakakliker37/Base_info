@@ -40,7 +40,7 @@ sudo apt-get install rkhunter
 ########################################################
 fct003(){
 sudo curl -s https://install.zerotier.com | sudo bash
-curl -o Zerotier.sh https://raw.githubusercontent.com/Yakakliker37/Base_info/main/Zerotier.sh
+curl -O Zerotier.sh https://raw.githubusercontent.com/Yakakliker37/Base_info/main/Zerotier.sh
 sh Zerotier.sh
 
 }
