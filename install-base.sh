@@ -57,6 +57,13 @@ sudo systemctl start fail2ban
 
 
 }
+########################################################
+fct005(){
+
+sudo apt-get install postfix mailutils libsasl2-2 ca-certificates libsasl2-modules
+sudo dpkg-reconfigure postfix
+
+}
 ############################################################
 if (whiptail --title "Zerotier" --yesno "Continuer ?" 8 78); then
 
@@ -65,7 +72,8 @@ OPTION=$(whiptail --title "Zerotier" --menu "Que souhaitez vous faire ?" 15 60 6
 "fct001" "    Mises à jours" \
 "fct002" "    Installation des utilitaires de base" \
 "fct003" "    Installation de Zerotier" \
-"fct004" "    Installation de Fail2ban" 3>&1 1>&2 2>&3)
+"fct004" "    Installation de Fail2ban" \
+"fct005" "    Installation de Postfix" 3>&1 1>&2 2>&3)
  
  
 exitstatus=$?
