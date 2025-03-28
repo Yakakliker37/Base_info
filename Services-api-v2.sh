@@ -3,31 +3,31 @@
 
 ## Les variables
 
-export env01="contrats.service"
-export env02="analyse-images.service"
-export env03="datamining-3.12.9.service"
-export env04="predictions.service"
-export env05="text_to_speech_gh.service"
-export env06="analyse_contrat_clients.service"
-export env07="(◕_◕)"
-export env08="(◕_◕)"
-export env09="(◕_◕)"
+export env01="bffgpaoapi"
+export env02="bffnocontestapi"
+export env03="bffplanning"
+export env04="bffreferentielapi"
+export env05="bffsseapi"
+export env06="bienapi"
+export env07="gdtapi"
+export env08="geideapi"
+export env09="svp-expertiseapi"
 
-export selection=""
+export selection="(◕_◕)"
 
 ## Les fonctions
 
 #####################################################
 fct001(){
-systemctl start $selection
+/etc/init.d/$selection.sh start
 }
 ######################################################
 fct002(){
-systemctl stop $selection
+/etc/init.d/$selection.sh stop
 }
 ######################################################
 fct003(){
-systemctl status $selection
+tail -f /home/$selection/applis/api/logs/api.log
 }
 fct999(){
 echo "(◕_◕) : That's all folks !"
@@ -37,7 +37,7 @@ echo "(◕_◕) : That's all folks !"
 ## L'Interface
 
 ############################################################
-if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); then
+if (whiptail --title "Environnements API" --yesno "(◕_◕) : Continuer ?" 8 78); then
 
 environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 \
 "1" "$env01" \
@@ -82,7 +82,7 @@ if [ $exitstatus = 0 ]; then
 OPTION=$(whiptail --title "Environnements API" --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
 "fct001" "    Démarrer $selection" \
 "fct002" "    Stopper $selection" \
-"fct003" "    Statut de $selection" \
+"fct003" "    Logs de $selection" \
 3>&1 1>&2 2>&3)
 
 exitstatus=$?
