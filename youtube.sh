@@ -8,7 +8,7 @@
 
 fct001(){
 
-yt-dlp -x --audio-format mp3 $url
+yt-dlp -x --audio-format m4a $url
 
 }
 
