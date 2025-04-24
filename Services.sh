@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250424-d
+# Version PRY20250424-e
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -79,6 +79,7 @@ fct001(){
 fct998
 export var25042401="/etc/init.d/"$environnement".sh"
 if [ -e "$var25042401" ]; then
+	chmod +x $var25042401
 	$var25042401 start
 	#echo $var25042401 start
 else
@@ -90,6 +91,7 @@ fct002(){
 fct998
 export var25042401="/etc/init.d/"$environnement".sh"
 if [ -e "$var25042401" ]; then
+	chmod +x $var25042401
 	$var25042401 stop
 	#echo $var25042401 stop
 else
