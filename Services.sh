@@ -14,6 +14,7 @@ if [ -e "$var25042302" ]; then
     rm ~/env.txt
 else
     echo Ok
+    clear
 fi
 
 
