@@ -1,43 +1,32 @@
 #!/bin/bash
-# Version PRY20250410-b
+# Version PRY20250424-a
 #
 # Ce script liste les environnements présents sur le serveur
-# Il propose l'arrêt, le démarrage de chacun des environnements ainsi que de tous les environnements
-# Il propose aussi de visualiser les logs de démarrage (nohup.out) de chaque environnement
+# Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
+# Il propose aussi de visualiser les logs de démarrage (nohup.out ou catalina.out) de chaque environnement
 #
 #
 
-# Actions préalables
+############ Actions préalables
 clear
 rm ~/env.txt
-mkdir ~/tmp
-rm -rf ~/tmp/*
 
-# Fichiers à exclure de la liste des environnements
+############ Fichiers à exclure de la liste des environnements
 export rem001=imdeo
 export rem002=montages
 
-# Création du fichier avec la liste des environnements présents
+############ Création du fichier avec la liste des environnements présents
 cd /home
 for env00 in *; do
 echo $env00 >> ~/env.txt
 done
 
-# Suppression des environnements exclus
+############ Suppression des environnements exclus
 sed -i "/$rem001/d" ~/env.txt
 sed -i "/$rem002/d" ~/env.txt
 
-# Création d'un fichier par environnements présents
-cd /home
-for env00 in *; do
-echo $env00 > ~/tmp/$env00
-done
-
-# Suppression des environnements exclus
-rm -rf ~/tmp/$rem001
-rm -rf ~/tmp/$rem002
-
-## Les variables
+############ Les variables
+export env0=""
 export env1=""
 export env2=""
 export env3=""
@@ -55,22 +44,20 @@ export env14=""
 export env15=""
 export env16=""
 export env17=""
-
-
 export selection="(◕_◕)"
+export var25042301="(°_°)"
 
-# Création d'un fichier par environnements présents
-cd /home
-for env00 in *; do
-echo $env00 > ~/tmp/$env00
-done
+# Variables couleurs
+export red="\033[31m"
+export turquoise="\033[36m"
+export gras="\033[1m"
+export rougegras="\033[1;31m"
+export reset="\033[0m"
 
-# Suppression des environnements exclus
-rm -rf ~/tmp/$rem001
-rm -rf ~/tmp/$rem002
-
-cd ~/tmp
-for f in *;
+############ Création de la liste des environnements
+cd ~
+i="0"
+for f in $(<env.txt)
 do
 var='env'
 var001="${var}${i}"
@@ -81,28 +68,51 @@ let "i++"
 done
 
 
-
-
 ## Les fonctions
 
 ############ Démarrage de l'environnement ###############
 fct001(){
 fct998
-/etc/init.d/$environnement.sh start
-#echo $environnement
+export var25042401="/etc/init.d/"$environnement".sh"
+if [ -e "$var25042401" ]; then
+	$var25042401 start
+	#echo $var25042401 start
+else
+    echo -e "${rougegras}"$var25042301" Le script "$var25042401" n'existe pas""$reset"
+fi
 }
 ############ Arrêt de l'environnement ###############
 fct002(){
 fct998
-/etc/init.d/$environnement.sh stop
-#echo $environnement
+export var25042401="/etc/init.d/"$environnement".sh"
+if [ -e "$var25042401" ]; then
+	$var25042401 stop
+	#echo $var25042401 stop
+else
+    echo -e "${rougegras}"$var25042301" Le script "$var25042401" n'existe pas""$reset"
+fi
 }
 ############ Affichage des logs de l'environnement ###############
 fct003(){
 fct998
 clear
-tail -f /home/$environnement/nohup.out
+#echo $environnement
+
+export catalina="/home/"$environnement"/tomcat/logs/catalina.out"
+export nohup="/home/"$environnement"/nohup.out"
+
+# Test pour vérifier quel fichier log existe
+if [ -e "$catalina" ]; then
+    tail -f $catalina
+else
+if [ -e "$nohup" ]; then
+	tail -f $nohup
+else
+	echo -e "${rougegras}"$var25042301" Impossible d'afficher les logs""$reset"
+fi
+fi
 }
+
 ############ Démarrage de tous les environnements ###############
 fct004(){
 clear
@@ -110,8 +120,14 @@ clear
 cd ~
 for ligne in $(<env.txt)
 do
-echo Démarrage de $ligne
-/etc/init.d/$ligne.sh start
+echo -e "${turquoise}"$var25042301" Démarrage de "$ligne"$reset"
+export var25042403="/etc/init.d/"$ligne".sh"
+if [ -e "$var25042403" ]; then
+	$var25042403 start
+	#echo $var25042403 start
+else
+    echo -e "${rougegras}"$var25042301" Le script "$var25042403" n'existe pas""$reset"
+fi
 echo "----------"
 sleep 15
 done
@@ -123,8 +139,14 @@ clear
 cd ~
 for ligne in $(<env.txt)
 do
-echo Arrêt de $ligne
-/etc/init.d/$ligne.sh stop
+echo -e "${turquoise}"$var25042301" Arrêt de "$ligne"$reset"
+export var25042404="/etc/init.d/"$ligne".sh"
+if [ -e "$var25042404" ]; then
+	$var25042404 stop
+	#echo $var25042404 stop
+else
+    echo -e "${rougegras}"$var25042301" Le script "$var25042404" n'existe pas""$reset"
+fi
 echo "----------"
 sleep 15
 done
@@ -133,6 +155,7 @@ done
 ############# Choix de l'environnement ############################
 fct998(){
 environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 \
+"$env0" "" \
 "$env1" "" \
 "$env2" "" \
 "$env3" "" \
@@ -158,14 +181,12 @@ fct999(){
 echo "(◕_◕) : That's all folks !"
 }
 
-
 ## L'Interface
 
 ############# Sélection de l'action à exécuter ############################
 if (whiptail --title "Environnements API" --yesno "(◕_◕) : Continuer ?" 8 78); then
 
 #fct998
-
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
