@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250424-a
+# Version PRY20250424-b
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -9,7 +9,15 @@
 
 ############ Actions préalables
 clear
-rm ~/env.txt
+export var25042302="~/env.txt"
+if [ -e "$var25042302" ]; then
+    rm ~/env.txt
+else
+    echo Ok
+fi
+
+
+
 
 ############ Fichiers à exclure de la liste des environnements
 export rem001=imdeo
