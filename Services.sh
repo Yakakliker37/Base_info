@@ -15,6 +15,7 @@ clear
 ############ Fichiers à exclure de la liste des environnements
 export rem001=imdeo
 export rem002=montages
+export rem003=prtg
 
 ############ Création du fichier avec la liste des environnements présents
 cd /home
@@ -25,6 +26,7 @@ done
 ############ Suppression des environnements exclus
 sed -i "/$rem001/d" ~/env.txt
 sed -i "/$rem002/d" ~/env.txt
+sed -i "/$rem003/d" ~/env.txt
 
 ############ Les variables
 export env0=""
