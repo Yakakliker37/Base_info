@@ -12,10 +12,6 @@ cd ~
 rm ~/env.txt
 clear
 
-
-
-
-
 ############ Fichiers à exclure de la liste des environnements
 export rem001=imdeo
 export rem002=montages
