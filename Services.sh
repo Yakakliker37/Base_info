@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250424-e
+# Version PRY20250424-f
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -129,6 +129,7 @@ do
 echo -e "${turquoise}"$var25042301" Démarrage de "$ligne"$reset"
 export var25042403="/etc/init.d/"$ligne".sh"
 if [ -e "$var25042403" ]; then
+	chmod +x $var25042403
 	$var25042403 start
 	#echo $var25042403 start
 else
@@ -148,6 +149,7 @@ do
 echo -e "${turquoise}"$var25042301" Arrêt de "$ligne"$reset"
 export var25042404="/etc/init.d/"$ligne".sh"
 if [ -e "$var25042404" ]; then
+	chmod +x $var25042404
 	$var25042404 stop
 	#echo $var25042404 stop
 else
