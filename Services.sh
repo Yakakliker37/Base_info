@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250424-b
+# Version PRY20250424-d
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -12,10 +12,11 @@ cd ~
 rm ~/env.txt
 clear
 
-############ Fichiers à exclure de la liste des environnements
+############ Profils  à exclure de la liste des environnements
 export rem001=imdeo
 export rem002=montages
 export rem003=prtg
+
 
 ############ Création du fichier avec la liste des environnements présents
 cd /home
@@ -155,6 +156,10 @@ sleep 15
 done
 }
 
+fct006(){
+htop
+}
+
 ############# Choix de l'environnement ############################
 fct998(){
 environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 \
@@ -187,18 +192,19 @@ echo "(◕_◕) : That's all folks !"
 ## L'Interface
 
 ############# Sélection de l'action à exécuter ############################
-if (whiptail --title "Environnements API" --yesno "(◕_◕) : Continuer ?" 8 78); then
+if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); then
 
 #fct998
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
-OPTION=$(whiptail --title "Environnements API" --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
+OPTION=$(whiptail --title "Environnements" --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
 "fct001" "    Démarrer un environnement" \
 "fct002" "    Stopper un environnement" \
 "fct003" "    Logs d' un environnement" \
 "fct004" "    Démarrer tous les environnements" \
 "fct005" "    Arrêter tous les environnements" \
+"fct006" "    Htop" \
 3>&1 1>&2 2>&3)
 
 exitstatus=$?
