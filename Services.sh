@@ -157,7 +157,7 @@ done
 }
 
 fct006(){
-	htop
+htop
 }
 
 ############# Choix de l'environnement ############################
