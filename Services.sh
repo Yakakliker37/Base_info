@@ -8,14 +8,10 @@
 #
 
 ############ Actions préalables
+cd ~
+rm ~/env.txt
 clear
-export var25042302="~/env.txt"
-if [ -e "$var25042302" ]; then
-    rm ~/env.txt
-else
-    echo Ok
-    clear
-fi
+
 
 
 
