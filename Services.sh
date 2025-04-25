@@ -43,17 +43,10 @@ export reset="\033[0m"
 ############ Création de la liste des environnements
 cd ~
 node_list=()
-i="0"
 for f in $(<env.txt)
 do
-var='env'
-var001="${var}${i}"
-
-export $var001=$f
 node_list[${#node_list[@]}]=$f
 node_list[${#node_list[@]}]=""
-let "i++"
-
 done
 
 
