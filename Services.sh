@@ -120,7 +120,7 @@ done
 ############ Arrêt de tous les environnements ###############
 fct005(){
 clear
-# Utilisation du fichier env.txt pour le démarrage des environnements
+# Utilisation du fichier env.txt pour l'arrêt des environnements
 cd ~
 for ligne in $(<env.txt)
 do
