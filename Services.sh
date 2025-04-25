@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250424-f
+# Version PRY20250425-a
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -30,24 +30,6 @@ sed -i "/$rem002/d" ~/env.txt
 sed -i "/$rem003/d" ~/env.txt
 
 ############ Les variables
-export env0=""
-export env1=""
-export env2=""
-export env3=""
-export env4=""
-export env5=""
-export env6=""
-export env7=""
-export env8=""
-export env9=""
-export env10=""
-export env11=""
-export env12=""
-export env13=""
-export env14=""
-export env15=""
-export env16=""
-export env17=""
 export selection="(◕_◕)"
 export var25042301="(°_°)"
 
@@ -60,6 +42,7 @@ export reset="\033[0m"
 
 ############ Création de la liste des environnements
 cd ~
+node_list=()
 i="0"
 for f in $(<env.txt)
 do
@@ -67,6 +50,8 @@ var='env'
 var001="${var}${i}"
 
 export $var001=$f
+node_list[${#node_list[@]}]=$f
+node_list[${#node_list[@]}]=""
 let "i++"
 
 done
@@ -166,26 +151,7 @@ htop
 
 ############# Choix de l'environnement ############################
 fct998(){
-environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 \
-"$env0" "" \
-"$env1" "" \
-"$env2" "" \
-"$env3" "" \
-"$env4" "" \
-"$env5" "" \
-"$env6" "" \
-"$env7" "" \
-"$env8" "" \
-"$env9" "" \
-"$env10" "" \
-"$env11" "" \
-"$env12" "" \
-"$env13" "" \
-"$env14" "" \
-"$env15" "" \
-"$env16" "" \
-"$env17" "" \
-3>&1 1>&2 2>&3)
+environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)
 }
 
 ############# Fin du script ############################
@@ -193,12 +159,12 @@ fct999(){
 echo "(◕_◕) : That's all folks !"
 }
 
+###########################################################################
 ## L'Interface
 
 ############# Sélection de l'action à exécuter ############################
 if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); then
 
-#fct998
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 
