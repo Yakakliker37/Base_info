@@ -4,22 +4,22 @@
 ## Les fonctions
 
 fct001(){
-
+echo ""
 }
 fct002(){
-
+echo ""
 }
 fct003(){
-
+echo ""
 }
 fct004(){
-
+echo ""
 }
 fct005(){
-
+echo ""
 }
 fct006(){
-
+echo ""
 }
 ############# Fonction fin de script ############################
 fct999(){
