@@ -19,6 +19,8 @@ useradd -m $var25051201
 passwd $var25051201
 
 # Démarrage et arrêt de l'environnement
+if (whiptail --title "Init.d" --yesno "(◕_◕) : Création du script init ?" 8 78); then
+
 touch /etc/init.d/$var25051201.sh
 chmod +x /etc/init.d/$var25051201.sh
 
@@ -56,11 +58,17 @@ esac
 exit 0
 EOF
 
+else
+echo ""
+fi
+
 
 # Configuration Apache
 touch /etc/apache2/sites-available/$var24051101-$var25051201.conf
 
 # Création du fichier logrotate dans /etc/apache2/logrotate
+if (whiptail --title "Logrotate" --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then
+
 touch /etc/apache2/$var25051201.cfg
 
 echo "création du fichier logrotate"
@@ -74,6 +82,9 @@ tee /etc/apache2/logrotate/$var25051201.cfg <<EOF
 	copytruncate
 }
 EOF
+else
+echo ""
+fi
 
 
 }
