@@ -64,7 +64,13 @@ fi
 
 
 # Configuration Apache
+if (whiptail --title "Apache" --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then
+
 touch /etc/apache2/sites-available/$var24051101-$var25051201.conf
+
+else
+echo ""
+fi
 
 # Création du fichier logrotate dans /etc/apache2/logrotate
 if (whiptail --title "Logrotate" --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then
