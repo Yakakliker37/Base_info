@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY20250425-a
+# Version PRY2025051601
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -32,6 +32,8 @@ sed -i "/$rem003/d" ~/env.txt
 ############ Les variables
 export selection="(◕_◕)"
 export var25042301="(°_°)"
+export var24051101=`date +%y%m%d`
+
 
 # Variables couleurs
 export red="\033[31m"
@@ -142,6 +144,94 @@ fct006(){
 htop
 }
 
+fct007(){
+cd /
+
+var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)
+
+# Environnement
+echo $var25051201
+useradd -m $var25051201
+passwd $var25051201
+
+# Démarrage et arrêt de l'environnement
+if (whiptail --title "Init.d" --yesno "(◕_◕) : Création du script init ?" 8 78); then
+
+touch /etc/init.d/$var25051201.sh
+chmod +x /etc/init.d/$var25051201.sh
+
+echo "création du script init.d"
+tee /etc/init.d/$var25051201.sh <<EOF
+#! /bin/bash
+#
+
+# chkconfig: 345 81 15
+# SpringBoot Start the Springboot server.
+#
+# description: service de demarrage SpringBoot
+# Source function library
+#. /etc/init.d/functions
+
+case "$1" in
+        start)
+                echo -ne "Starting tomcat... \n"
+                su - $var25051201 -c '/home/$var25051201/applis/api/scripts/start.sh'
+                exit 1
+        ;;
+
+        stop)
+                echo -ne "Stopping tomcat...\n"
+                su - $var25051201 -c '/home/$var25051201/applis/api/scripts/stop.sh'
+                exit 1
+        ;;
+
+        *)
+                echo "Usage: /etc/init.d/$var25051201.sh {start|stop}"
+                exit 1
+        ;;
+esac
+
+exit 0
+EOF
+
+else
+echo ""
+fi
+
+
+# Configuration Apache
+if (whiptail --title "Apache" --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then
+
+touch /etc/apache2/sites-available/$var24051101-$var25051201.conf
+
+else
+echo ""
+fi
+
+# Création du fichier logrotate dans /etc/apache2/logrotate
+if (whiptail --title "Logrotate" --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then
+
+touch /etc/apache2/$var25051201.cfg
+
+echo "création du fichier logrotate"
+tee /etc/apache2/logrotate/$var25051201.cfg <<EOF
+/home/$var25051201/logs-apache/*.log {
+        daily
+        rotate 90
+        compress
+	delaycompress
+	missingok
+	copytruncate
+}
+EOF
+else
+echo ""
+fi
+whiptail --msgbox "Création de l'environnement terminée." 10 50 –title "Environnement"
+
+}
+
+
 ############# Choix de l'environnement ############################
 fct998(){
 environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)
@@ -168,6 +258,7 @@ OPTION=$(whiptail --title "Environnements" --menu "(◕_◕) : Que souhaitez vou
 "fct004" "    Démarrer tous les environnements" \
 "fct005" "    Arrêter tous les environnements" \
 "fct006" "    Htop" \
+"fct007" "    Création d'un environnement" \
 3>&1 1>&2 2>&3)
 
 exitstatus=$?
