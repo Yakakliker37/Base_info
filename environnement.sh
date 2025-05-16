@@ -14,6 +14,8 @@ cd /
 var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)
 
 # Environnement
+### Arborescence initiale créée dans /etc/skel
+
 echo $var25051201
 useradd -m $var25051201
 passwd $var25051201
