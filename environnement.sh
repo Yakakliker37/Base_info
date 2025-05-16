@@ -1,5 +1,5 @@
 #!/bin/bash
-# version 25051601
+# version PRY25051601
 ###########################################################################
 ## Les variables
 
@@ -85,7 +85,7 @@ EOF
 else
 echo ""
 fi
-
+whiptail --msgbox "Création de l'environnement terminée." 10 50 –title "Environnement"
 
 }
 fct002(){
