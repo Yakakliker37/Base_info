@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# version 25051601
 ###########################################################################
 ## Les variables
 
@@ -22,8 +22,59 @@ passwd $var25051201
 touch /etc/init.d/$var25051201.sh
 chmod +x /etc/init.d/$var25051201.sh
 
+echo "création du script init.d"
+tee /etc/init.d/$var25051201.sh <<EOF
+#! /bin/bash
+#
+
+# chkconfig: 345 81 15
+# SpringBoot Start the Springboot server.
+#
+# description: service de demarrage SpringBoot
+# Source function library
+#. /etc/init.d/functions
+
+case "$1" in
+        start)
+                echo -ne "Starting tomcat... \n"
+                su - $var25051201 -c '/home/$var25051201/applis/api/scripts/start.sh'
+                exit 1
+        ;;
+
+        stop)
+                echo -ne "Stopping tomcat...\n"
+                su - $var25051201 -c '/home/$var25051201/applis/api/scripts/stop.sh'
+                exit 1
+        ;;
+
+        *)
+                echo "Usage: /etc/init.d/$var25051201.sh {start|stop}"
+                exit 1
+        ;;
+esac
+
+exit 0
+EOF
+
+
 # Configuration Apache
 touch /etc/apache2/sites-available/$var24051101-$var25051201.conf
+
+# Création du fichier logrotate dans /etc/apache2/logrotate
+touch /etc/apache2/$var25051201.cfg
+
+echo "création du fichier logrotate"
+tee /etc/apache2/logrotate/$var25051201.cfg <<EOF
+/home/$var25051201/logs-apache/*.log {
+        daily
+        rotate 90
+        compress
+	delaycompress
+	missingok
+	copytruncate
+}
+EOF
+
 
 }
 fct002(){
