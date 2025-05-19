@@ -1,5 +1,5 @@
 #!/bin/bash
-# version PRY25051601
+# version PRY25051901
 ###########################################################################
 ## Les variables
 
@@ -17,7 +17,7 @@ var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'en
 ### Arborescence initiale créée dans /etc/skel
 
 echo $var25051201
-useradd -m $var25051201
+useradd -s /bin/bash -m $var25051201
 passwd $var25051201
 
 # Démarrage et arrêt de l'environnement
