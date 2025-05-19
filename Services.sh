@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY2025051601
+# Version PRY2025051901
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -151,7 +151,7 @@ var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'en
 
 # Environnement
 echo $var25051201
-useradd -m $var25051201
+useradd -s /bin/bash -m $var25051201
 passwd $var25051201
 
 # Démarrage et arrêt de l'environnement
