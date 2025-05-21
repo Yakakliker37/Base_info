@@ -9,7 +9,8 @@
 
 ############ Actions préalables
 cd ~ || exit
-export var25052101=$(mktemp)  # Fichier temporaire
+export var25052101
+var25052101=$(mktemp)  # Fichier temporaire
 
 clear
 
@@ -33,8 +34,9 @@ sed -i "/$rem003/d" $var25052101
 export selection="(◕_◕)"
 export var25042301="(°_°)"
 
-var24051101=$(date +%y%m%d)
 export var24051101
+var24051101=$(date +%y%m%d)
+
 
 # Variables couleurs --- Ca sert à rien mais ça a de la gueule
 export red="\033[31m"
@@ -56,7 +58,7 @@ done
 ############ Démarrage de l'environnement ###############
 fct001() {
 	fct998
-	export var25042401=/etc/init.d/$environnement.sh
+	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
 		chmod +x $var25042401
 		$var25042401 start
@@ -68,7 +70,7 @@ fct001() {
 ############ Arrêt de l'environnement ###############
 fct002() {
 	fct998
-	export var25042401=/etc/init.d/$environnement.sh
+	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
 		chmod +x $var25042401
 		$var25042401 stop
@@ -81,17 +83,17 @@ fct002() {
 fct003() {
 	fct998
 	clear
-	#echo $environnement
+	#echo $var25052104
 
-	export catalina=/home/$environnement/tomcat/logs/catalina.out
-	export nohup=/home/$environnement/nohup.out
+	export var25052102=/home/$var25052104/tomcat/logs/catalina.out
+	export var25052103=/home/$var25052104/nohup.out
 
 	# Test pour vérifier quel fichier log existe
-	if [ -e "$catalina" ]; then
-		tail -f $catalina
+	if [ -e "$var25052102" ]; then
+		tail -f $var25052102
 	else
-		if [ -e "$nohup" ]; then
-			tail -f $nohup
+		if [ -e "$var25052103" ]; then
+			tail -f $var25052103
 		else
 			echo -e ${rougegras} $var25042301 Impossible d"'"afficher les logs ${reset}
 		fi
@@ -231,7 +233,7 @@ EOF
 
 ############# Choix de l'environnement ############################
 fct998() {
-	environnement=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)
+	var25052104=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)
 }
 
 ############# Fin du script ############################
