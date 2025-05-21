@@ -156,7 +156,7 @@ fct005() {
 
 ############ Htop ###############
 fct006() {
-	rm -f "$var25052101" 																							# Suppression du fichier temporaire	
+	rm -f "$var25052101" 																								# Suppression du fichier temporaire	
 	htop																												# Commande htop pour affichage des processus
 }
 
@@ -255,7 +255,7 @@ EOF
 			ln -s "$var25052203" java-"$var25051201"																	# Création du lien JDK
 		else
 			#echo "La version $var25052203 n'est pas présente sur le serveur. "
-			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60 –-title "JDK"  			# Message d'alerte concernant le JDK
+			whiptail –-title "JDK" --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   		# Message d'alerte concernant le JDK
 		fi
 
 	else
@@ -263,7 +263,7 @@ EOF
 	fi
 	
 	rm -f "$var25052101" 																								# Suppression du fichier temporaire	
-	whiptail --msgbox "Création de l'environnement terminée." 10 60 –-title "Environnement"								# Message d'information de fin de création de l'environnement
+	whiptail –-title "Environnement" --msgbox "Création de l'environnement terminée." 10 60 							# Message d'information de fin de création de l'environnement
 
 
 
