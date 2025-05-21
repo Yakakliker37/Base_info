@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY2025052101
+# Version PRY-25052101
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -11,8 +11,6 @@
 cd ~ || exit
 export var25052101
 var25052101=$(mktemp)  																									# Création du fichier temporaire
-
-clear
 
 ############ Profils  à exclure de la liste des environnements
 export rem001=imdeo
@@ -38,7 +36,7 @@ export var24051101
 var24051101=$(date +%y%m%d)																								# Variable date année-mois-jour
 
 
-# Variables couleurs --- Pour faire sympa
+# Variables couleurs --- Pour faire sympa --- Oh la belle bleue !
 export red="\033[31m"																									# Rouge
 export turquoise="\033[36m"																								# Turquoise
 export gras="\033[1m"																									# Gras
@@ -82,6 +80,7 @@ fct002() {
 		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"							# Message d'erreur si le script d'arrêt n'existe pas
 	fi
 }
+
 ############ Affichage des logs de l'environnement ###############
 fct003() {
 	fct998
@@ -157,6 +156,7 @@ fct005() {
 
 ############ Htop ###############
 fct006() {
+	rm -f "$var25052101" 																							# Suppression du fichier temporaire	
 	htop																												# Commande htop pour affichage des processus
 }
 
@@ -244,9 +244,26 @@ EOF
 	else
 		echo ""
 	fi
+
+	if (whiptail --title "JDK" --yesno "(◕_◕) : Création lien Java ?" 8 78); then										# Création du lien JDK ? OUI/NON
+
+	var25052203=$(whiptail --title "JDK" --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)					# Initialisation de la variable du JDK
+	cd /usr/java || exit
+
+		if [ -d "$var25052203" ]; then																					# Vérification de la présence du JDK
+			#echo "Le dossier $var25052203 existe."
+			ln -s "$var25052203" java-"$var25051201"																	# Création du lien JDK
+		else
+			#echo "La version $var25052203 n'est pas présente sur le serveur. "
+			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60 –-title "JDK"  			# Message d'alerte concernant le JDK
+		fi
+
+	else
+		echo ""
+	fi
 	
 	rm -f "$var25052101" 																								# Suppression du fichier temporaire	
-	whiptail --msgbox "Création de l'environnement terminée." 10 50 –title "Environnement"								# Message d'information de fin de création de l'environnement
+	whiptail --msgbox "Création de l'environnement terminée." 10 60 –-title "Environnement"								# Message d'information de fin de création de l'environnement
 
 
 
@@ -278,8 +295,8 @@ if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); t
 			"fct003" "    Logs d' un environnement" \
 			"fct004" "    Démarrer tous les environnements" \
 			"fct005" "    Arrêter tous les environnements" \
-			"fct006" "    Htop" \
 			"fct007" "    Création d'un environnement" \
+			"fct006" "    Htop" \
 			3>&1 1>&2 2>&3)
 
 		exitstatus=$?
