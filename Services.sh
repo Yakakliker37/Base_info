@@ -22,13 +22,13 @@ export rem003=prtg
 ############ Création du fichier avec la liste des environnements présents
 cd /home || exit
 for env00 in *; do
-	echo $env00 >> $var25052101
+	echo "$env00" >> "$var25052101"
 done
 
 ############ Suppression des environnements exclus
-sed -i "/$rem001/d" $var25052101
-sed -i "/$rem002/d" $var25052101
-sed -i "/$rem003/d" $var25052101
+sed -i "/$rem001/d" "$var25052101"
+sed -i "/$rem002/d" "$var25052101"
+sed -i "/$rem003/d" "$var25052101"
 
 ############ Les variables
 export selection="(◕_◕)"
@@ -48,7 +48,7 @@ export reset="\033[0m"
 ############ Création de la liste des environnements
 cd ~ || exit
 node_list=()
-for f in $(<$var25052101); do
+for f in $(<"$var25052101"); do
 	node_list[${#node_list[@]}]=$f
 	node_list[${#node_list[@]}]=""
 done
@@ -60,11 +60,11 @@ fct001() {
 	fct998
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
-		chmod +x $var25042401
+		chmod +x "$var25042401"
 		$var25042401 start
-		echo $var25042401 start
+		echo "$var25042401" start
 	else
-		echo -e ${rougegras} $var25042301 Le script $var25042401 n"'"existe pas ${reset}
+		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"
 	fi
 }
 ############ Arrêt de l'environnement ###############
@@ -72,11 +72,11 @@ fct002() {
 	fct998
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
-		chmod +x $var25042401
+		chmod +x "$var25042401"
 		$var25042401 stop
-		echo $var25042401 stop
+		echo "$var25042401" stop
 	else
-		echo -e ${rougegras} $var25042301 Le script $var25042401 n"'"existe pas ${reset}
+		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"
 	fi
 }
 ############ Affichage des logs de l'environnement ###############
@@ -90,12 +90,15 @@ fct003() {
 
 	# Test pour vérifier quel fichier log existe
 	if [ -e "$var25052102" ]; then
-		tail -f $var25052102
+		rm -f "$var25052101" # Suppression du fichier temporaire
+		tail -f "$var25052102" # Affichage du log
 	else
 		if [ -e "$var25052103" ]; then
-			tail -f $var25052103
+			rm -f "$var25052101" # Suppression du fichier temporaire
+			tail -f "$var25052103" # Affichage du log
 		else
-			echo -e ${rougegras} $var25042301 Impossible d"'"afficher les logs ${reset}
+			rm -f "$var25052101" # Suppression du fichier temporaire
+			echo -e "${rougegras}" $var25042301 Impossible d"'"afficher les logs de "$var25052104". "${reset}" # Message d'erreur
 		fi
 	fi
 }
@@ -105,15 +108,15 @@ fct004() {
 	clear
 	# Utilisation du fichier $var25052101 pour le démarrage des environnements
 	cd ~ || exit
-	for ligne in $(<$var25052101); do
-		echo -e ${turquoise} $var25042301 Démarrage de $ligne ${reset}
+	for ligne in $(<"$var25052101"); do
+		echo -e "${turquoise}" $var25042301 Démarrage de "$ligne". "${reset}"
 		export var25042403=/etc/init.d/$ligne.sh
 		if [ -e "$var25042403" ]; then
-			chmod +x $var25042403
+			chmod +x "$var25042403"
 			$var25042403 start
-			echo $var25042403 start
+			echo "$var25042403" start
 		else
-			echo -e ${rougegras} $var25042301 Le script $var25042403 n"'"existe pas ${reset}
+			echo -e "${rougegras}" $var25042301 Le script "$var25042403" n"'"existe pas. "${reset}"
 		fi
 		echo "----------"
 		sleep 10
@@ -124,15 +127,15 @@ fct005() {
 	clear
 	# Utilisation du fichier $var25052101 pour l'arrêt des environnements
 	cd ~ || exit
-	for ligne in $(<$var25052101); do
-		echo -e ${turquoise} $var25042301 Arrêt de $ligne ${reset}
+	for ligne in $(<"$var25052101"); do
+		echo -e "${turquoise}" $var25042301 Arrêt de "$ligne" "${reset}"
 		export var25042404=/etc/init.d/$ligne.sh
 		if [ -e "$var25042404" ]; then
-			chmod +x $var25042404
+			chmod +x "$var25042404"
 			$var25042404 stop
-			echo $var25042404 stop
+			echo "$var25042404" stop
 		else
-			echo -e ${rougegras} $var25042301 Le script $var25042404 n"'"existe pas ${reset}
+			echo -e "${rougegras}" $var25042301 Le script "$var25042404" n"'"existe pas. "${reset}"
 		fi
 		echo "----------"
 		sleep 10
@@ -151,18 +154,18 @@ fct007() {
 	var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)
 
 	# Environnement
-	echo $var25051201
-	useradd -s /bin/bash -m $var25051201
-	passwd $var25051201
+	echo "$var25051201"
+	useradd -s /bin/bash -m "$var25051201"
+	passwd "$var25051201"
 
 	# Démarrage et arrêt de l'environnement
 	if (whiptail --title "Init.d" --yesno "(◕_◕) : Création du script init ?" 8 78); then
 
-		touch /etc/init.d/$var25051201.sh
-		chmod +x /etc/init.d/$var25051201.sh
+		touch /etc/init.d/"$var25051201".sh
+		chmod +x /etc/init.d/"$var25051201".sh
 
 		echo "création du script init.d"
-		tee /etc/init.d/$var25051201.sh <<EOF
+		tee /etc/init.d/"$var25051201".sh <<EOF
 #! /bin/bash
 #
 
@@ -202,7 +205,7 @@ EOF
 	# Configuration Apache
 	if (whiptail --title "Apache" --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then
 
-		touch /etc/apache2/sites-available/$var24051101-$var25051201.conf
+		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf
 
 	else
 		echo ""
@@ -211,10 +214,10 @@ EOF
 	# Création du fichier logrotate dans /etc/apache2/logrotate
 	if (whiptail --title "Logrotate" --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then
 
-		touch /etc/apache2/$var25051201.cfg
+		touch /etc/apache2/"$var25051201".cfg
 
 		echo "création du fichier logrotate"
-		tee /etc/apache2/logrotate/$var25051201.cfg <<EOF
+		tee /etc/apache2/logrotate/"$var25051201".cfg <<EOF
 /home/$var25051201/logs-apache/*.log {
         daily
         rotate 90
