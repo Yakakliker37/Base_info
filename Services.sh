@@ -1,15 +1,15 @@
 #!/bin/bash
-# Version PRY2025052001
+# Version PRY2025052101
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
 # Il propose aussi de visualiser les logs de démarrage (nohup.out ou catalina.out) de chaque environnement
-#
+# Il propose aussi la création de l'environnement
 #
 
 ############ Actions préalables
 cd ~ || exit
-temp_file=$(mktemp)  # Crée un fichier temporaire sécurisé
+export var25052101=$(mktemp)  # Fichier temporaire
 
 clear
 
@@ -21,13 +21,13 @@ export rem003=prtg
 ############ Création du fichier avec la liste des environnements présents
 cd /home || exit
 for env00 in *; do
-	echo $env00 >> $temp_file
+	echo $env00 >> $var25052101
 done
 
 ############ Suppression des environnements exclus
-sed -i "/$rem001/d" $temp_file
-sed -i "/$rem002/d" $temp_file
-sed -i "/$rem003/d" $temp_file
+sed -i "/$rem001/d" $var25052101
+sed -i "/$rem002/d" $var25052101
+sed -i "/$rem003/d" $var25052101
 
 ############ Les variables
 export selection="(◕_◕)"
@@ -46,7 +46,7 @@ export reset="\033[0m"
 ############ Création de la liste des environnements
 cd ~ || exit
 node_list=()
-for f in $(<$temp_file); do
+for f in $(<$var25052101); do
 	node_list[${#node_list[@]}]=$f
 	node_list[${#node_list[@]}]=""
 done
@@ -101,9 +101,9 @@ fct003() {
 ############ Démarrage de tous les environnements ###############
 fct004() {
 	clear
-	# Utilisation du fichier $temp_file pour le démarrage des environnements
+	# Utilisation du fichier $var25052101 pour le démarrage des environnements
 	cd ~ || exit
-	for ligne in $(<$temp_file); do
+	for ligne in $(<$var25052101); do
 		echo -e ${turquoise} $var25042301 Démarrage de $ligne ${reset}
 		export var25042403=/etc/init.d/$ligne.sh
 		if [ -e "$var25042403" ]; then
@@ -120,9 +120,9 @@ fct004() {
 ############ Arrêt de tous les environnements ###############
 fct005() {
 	clear
-	# Utilisation du fichier $temp_file pour l'arrêt des environnements
+	# Utilisation du fichier $var25052101 pour l'arrêt des environnements
 	cd ~ || exit
-	for ligne in $(<$temp_file); do
+	for ligne in $(<$var25052101); do
 		echo -e ${turquoise} $var25042301 Arrêt de $ligne ${reset}
 		export var25042404=/etc/init.d/$ligne.sh
 		if [ -e "$var25042404" ]; then
@@ -137,10 +137,12 @@ fct005() {
 	done
 }
 
+############ Htop ###############
 fct006() {
 	htop
 }
 
+############ Création de l'environnement ###############
 fct007() {
 	cd / || exit
 
@@ -234,12 +236,12 @@ fct998() {
 
 ############# Fin du script ############################
 fct999() {
-	rm -f "$temp_file"
+	rm -f "$var25052101"
 	echo "(◕_◕) : That's all folks !"
 }
 
 ###########################################################################
-## L'Interface
+## L'Interface graphique
 
 ############# Sélection de l'action à exécuter ############################
 if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); then
