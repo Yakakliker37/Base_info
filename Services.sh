@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25052101
+# Version PRY-25062001
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -164,15 +164,30 @@ fct006() {
 fct007() {
 	cd / || exit
 
-	var25051201=$(whiptail --title "Environnement" --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)	# Initialisation de la variable d'environnement 
+	var25051201=$(whiptail --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)							# Initialisation de la variable d'environnement 
 
 	# Environnement
 	echo "$var25051201"																									# Affichage du nom de l'environnement
 	useradd -s /bin/bash -m "$var25051201"																				# Commande de création de l'environnement
 	passwd "$var25051201"																								# Définition du mot de passe de l'environnement
 
+	# Création de l' arborescence	
+	if (whiptail --yesno "(◕_◕) : Création de l'arborescence ?" 8 78); then											# Création de l'arborescence ? OUI/NON
+	mkdir /home/$var25051201/deploy-logs
+	mkdir /home/$var25051201/logs-apache
+	mkdir /home/$var25051201/www
+	mkdir -p /home/$var25051201/applis/api/conf/backup
+	mkdir -p /home/$var25051201/applis/api/logs
+	mkdir -p /home/$var25051201/applis/api/scripts
+	chown -R $var25051201: /home/$var25051201
+
+	else
+		echo ""
+	fi
+
+
 	# Démarrage et arrêt de l'environnement
-	if (whiptail --title "Init.d" --yesno "(◕_◕) : Création du script init ?" 8 78); then								# Création du script de démarrage ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
 
 		touch /etc/init.d/"$var25051201".sh																				# Création du fichier vierge "environnement.sh"
 		chmod +x /etc/init.d/"$var25051201".sh																			# On rend exécutable le script
@@ -189,7 +204,7 @@ fct007() {
 # Source function library
 #. /etc/init.d/functions
 
-case "$1" in
+case "\$1" in
         start)
                 echo -ne "Starting tomcat... \n"
                 su - $var25051201 -c '/home/$var25051201/applis/api/scripts/start.sh'
@@ -216,7 +231,7 @@ EOF
 	fi
 
 	# Configuration Apache
-	if (whiptail --title "Apache" --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then							# Création du fichier de configuration Apache ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then							# Création du fichier de configuration Apache ? OUI/NON
 
 		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf											# Création du fichier vierge date-environnement.conf
 
@@ -225,7 +240,7 @@ EOF
 	fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
-	if (whiptail --title "Logrotate" --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then						# Création du fichier logrotate ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then						# Création du fichier logrotate ? OUI/NON
 
 		touch /etc/apache2/"$var25051201".cfg																			# Création du fichier vierge logrotate
 
@@ -245,9 +260,9 @@ EOF
 		echo ""
 	fi
 
-	if (whiptail --title "JDK" --yesno "(◕_◕) : Création lien Java ?" 8 78); then										# Création du lien JDK ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then										# Création du lien JDK ? OUI/NON
 
-	var25052203=$(whiptail --title "JDK" --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)					# Initialisation de la variable du JDK
+	var25052203=$(whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)					# Initialisation de la variable du JDK
 	cd /usr/java || exit
 
 		if [ -d "$var25052203" ]; then																					# Vérification de la présence du JDK
@@ -255,7 +270,7 @@ EOF
 			ln -s "$var25052203" java-"$var25051201"																	# Création du lien JDK
 		else
 			#echo "La version $var25052203 n'est pas présente sur le serveur. "
-			whiptail –-title "JDK" --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   		# Message d'alerte concernant le JDK
+			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   					# Message d'alerte concernant le JDK
 		fi
 
 	else
@@ -263,7 +278,7 @@ EOF
 	fi
 	
 	rm -f "$var25052101" 																								# Suppression du fichier temporaire	
-	whiptail –-title "Environnement" --msgbox "Création de l'environnement terminée." 10 60 							# Message d'information de fin de création de l'environnement
+	whiptail --msgbox "Création de l'environnement terminée." 10 60 													# Message d'information de fin de création de l'environnement
 
 
 
@@ -284,12 +299,12 @@ fct999() {
 ## L'Interface graphique
 
 ############# Sélection de l'action à exécuter ############################
-if (whiptail --title "Environnements" --yesno "(◕_◕) : Continuer ?" 8 78); then										# Continuer ? OUI/NON
+if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then										# Continuer ? OUI/NON
 
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then																						# Choix de l'action à effectuer
 
-		OPTION=$(whiptail --title "Environnements" --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
+		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
 			"fct001" "    Démarrer un environnement" \
 			"fct002" "    Stopper un environnement" \
 			"fct003" "    Logs d' un environnement" \
