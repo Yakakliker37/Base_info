@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25062001
+# Version PRY-25062402
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -9,7 +9,7 @@
 
 ############ Actions préalables
 cd ~ || exit
-export var25052101
+export var2505210
 var25052101=$(mktemp)  																									# Création du fichier temporaire
 
 ############ Profils  à exclure de la liste des environnements
@@ -52,6 +52,8 @@ for f in $(<"$var25052101"); do
 done
 
 ## Les fonctions
+
+
 
 ############ Démarrage de l'environnement ###############
 fct001() {
@@ -171,19 +173,23 @@ fct007() {
 	useradd -s /bin/bash -m "$var25051201"																				# Commande de création de l'environnement
 	passwd "$var25051201"																								# Définition du mot de passe de l'environnement
 
-	# Création de l' arborescence	
-	if (whiptail --yesno "(◕_◕) : Création de l'arborescence ?" 8 78); then											# Création de l'arborescence ? OUI/NON
-	mkdir /home/$var25051201/deploy-logs
-	mkdir /home/$var25051201/logs-apache
-	mkdir /home/$var25051201/www
-	mkdir -p /home/$var25051201/applis/api/conf/backup
-	mkdir -p /home/$var25051201/applis/api/logs
-	mkdir -p /home/$var25051201/applis/api/scripts
-	chown -R $var25051201: /home/$var25051201
+	# Type d'environnement
 
-	else
-		echo ""
-	fi
+		var25062401=$(whiptail --menu "(◕_◕) : Sélection de l'environnement ?" 25 60 15 \
+			"fct100" "    Springboot" \
+			"fct101" "    Python" \
+			"fct102" "    Node JS" \
+			3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+
+			$var25062401																								# Lancement de la fonction choisie
+
+		else
+			echo ""
+		fi
+	
 
 
 	# Démarrage et arrêt de l'environnement
@@ -231,7 +237,7 @@ EOF
 	fi
 
 	# Configuration Apache
-	if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then							# Création du fichier de configuration Apache ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
 
 		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf											# Création du fichier vierge date-environnement.conf
 
@@ -240,7 +246,7 @@ EOF
 	fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
-	if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then						# Création du fichier logrotate ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
 
 		touch /etc/apache2/"$var25051201".cfg																			# Création du fichier vierge logrotate
 
@@ -260,9 +266,9 @@ EOF
 		echo ""
 	fi
 
-	if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then										# Création du lien JDK ? OUI/NON
+	if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
 
-	var25052203=$(whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)					# Initialisation de la variable du JDK
+	var25052203=$(whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)									# Initialisation de la variable du JDK
 	cd /usr/java || exit
 
 		if [ -d "$var25052203" ]; then																					# Vérification de la présence du JDK
@@ -284,6 +290,128 @@ EOF
 
 }
 
+######## Démarrage du service Haproxy #####################
+fct008(){
+systemctl start haproxy
+}
+######## Arrêt du service Haproxy #########################
+fct009(){
+systemctl stop haproxy
+}
+######## Rechargement de la configuration Haproxy #########
+fct010(){
+systemctl reload haproxy
+}
+######## Vérification de la configuration Haproxy #########
+fct011(){
+haproxy -f /etc/haproxy/haproxy.cfg -c
+}
+######## Statut du service Haproxy ########################
+fct012(){
+hatop -s /var/run/haproxy/admin.sock
+}
+
+
+
+###########################################################
+
+	# Création de l' arborescence Springboot	
+fct100() {
+	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Springboot ?" 8 78); then										# Création de l'arborescence Springboot ? OUI/NON
+	mkdir /home/$var25051201/deploy-logs
+	mkdir /home/$var25051201/logs-apache
+	mkdir /home/$var25051201/www
+	mkdir -p /home/$var25051201/applis/api/conf/backup
+	mkdir -p /home/$var25051201/applis/api/logs
+	mkdir -p /home/$var25051201/applis/api/scripts
+	chown -R $var25051201: /home/$var25051201
+
+	else
+		echo ""
+	fi
+}
+
+###########################################################
+	# Création de l' arborescence Python	
+fct101() {
+	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Python ?" 8 78); then											# Création de l'arborescence Python ? OUI/NON
+	mkdir /home/$var25051201/deploy-logs
+	mkdir /home/$var25051201/www
+	chown -R $var25051201: /home/$var25051201
+
+	else
+		echo ""
+	fi
+}
+
+##########################################################
+	# Création de l' arborescence Node JS	
+fct102() {
+	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Node JS ?" 8 78); then										# Création de l'arborescence Node JS ? OUI/NON
+	mkdir /home/$var25051201/deploy-logs
+	mkdir /home/$var25051201/logs-apache
+	mkdir /home/$var25051201/www
+	chown -R $var25051201: /home/$var25051201
+
+	else
+		echo ""
+	fi
+}
+##########################################################
+
+
+
+
+
+
+######## Menu de Gestion de Haproxy ########################
+fct996() {
+
+		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct008" "    Démarrer le service Haproxy" \
+			"fct009" "    Stopper le service Haproxy" \
+			"fct010" "    Rechargement Haproxy" \
+			"fct011" "    Vérification de la configuration Haproxy" \
+			"fct012" "    Statut du service Haproxy" \
+			3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+
+			$OPTION																										# Lancement de la fonction choisie
+
+		else
+			echo ""
+		fi
+
+
+}
+######## Menu de Gestion des environnements ########################
+fct997() {
+
+		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct001" "    Démarrer un environnement" \
+			"fct002" "    Stopper un environnement" \
+			"fct003" "    Logs d' un environnement" \
+			"fct004" "    Démarrer tous les environnements" \
+			"fct005" "    Arrêter tous les environnements" \
+			"fct007" "    Création d'un environnement" \
+			3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+
+			$OPTION																										# Lancement de la fonction choisie
+
+		else
+			echo ""
+		fi
+
+
+}
+
+
+
 ############# Choix de l'environnement ############################
 fct998() {
 	var25052104=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)	# Initialisation de la variable d'environnement
@@ -299,19 +427,15 @@ fct999() {
 ## L'Interface graphique
 
 ############# Sélection de l'action à exécuter ############################
-if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then										# Continuer ? OUI/NON
+if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then																	# Continuer ? OUI/NON
 
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then																						# Choix de l'action à effectuer
 
-		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 20 60 10 \
-			"fct001" "    Démarrer un environnement" \
-			"fct002" "    Stopper un environnement" \
-			"fct003" "    Logs d' un environnement" \
-			"fct004" "    Démarrer tous les environnements" \
-			"fct005" "    Arrêter tous les environnements" \
-			"fct007" "    Création d'un environnement" \
+		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct997" "    Gestion des environnements" \
 			"fct006" "    Htop" \
+			"fct996" "    Gestion de Haproxy" \
 			3>&1 1>&2 2>&3)
 
 		exitstatus=$?
