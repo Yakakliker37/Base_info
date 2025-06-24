@@ -1,10 +1,11 @@
 #!/bin/bash
-# Version PRY-25062402
+# Version PRY-25062403
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
 # Il propose aussi de visualiser les logs de démarrage (nohup.out ou catalina.out) de chaque environnement
 # Il propose aussi la création de l'environnement
+# Il propose la gestion de Haproxy (Vérification du fichier conf / Arrêt, démarrage, statut du service / Application de la configuration)
 #
 
 ############ Actions préalables
@@ -186,8 +187,8 @@ fct007() {
 
 			$var25062401																								# Lancement de la fonction choisie
 
-		else
-			echo ""
+#		else
+#			echo ""
 		fi
 	
 
@@ -232,8 +233,8 @@ esac
 exit 0
 EOF
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 
 	# Configuration Apache
@@ -241,8 +242,8 @@ EOF
 
 		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf											# Création du fichier vierge date-environnement.conf
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
@@ -262,8 +263,8 @@ EOF
 }
 EOF
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 
 	if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
@@ -279,8 +280,8 @@ EOF
 			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   					# Message d'alerte concernant le JDK
 		fi
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 	
 	rm -f "$var25052101" 																								# Suppression du fichier temporaire	
@@ -326,8 +327,8 @@ fct100() {
 	mkdir -p /home/$var25051201/applis/api/scripts
 	chown -R $var25051201: /home/$var25051201
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 }
 
@@ -339,8 +340,8 @@ fct101() {
 	mkdir /home/$var25051201/www
 	chown -R $var25051201: /home/$var25051201
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 }
 
@@ -353,8 +354,8 @@ fct102() {
 	mkdir /home/$var25051201/www
 	chown -R $var25051201: /home/$var25051201
 
-	else
-		echo ""
+#	else
+#		echo ""
 	fi
 }
 ##########################################################
@@ -380,8 +381,8 @@ fct996() {
 
 			$OPTION																										# Lancement de la fonction choisie
 
-		else
-			echo ""
+#		else
+#			echo ""
 		fi
 
 
@@ -403,8 +404,8 @@ fct997() {
 
 			$OPTION																										# Lancement de la fonction choisie
 
-		else
-			echo ""
+#		else
+#			echo ""
 		fi
 
 
