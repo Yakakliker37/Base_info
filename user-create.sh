@@ -2,7 +2,7 @@
 
 cd / || exit
 var25051201=$(whiptail --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)								# Initialisation de la variable d'environnement 
-
+fct104
 
 
 ##########################################################
