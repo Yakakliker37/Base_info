@@ -1,0 +1,43 @@
+############ Actions préalables
+cd ~ || exit
+export var25052101
+var25052101=$(mktemp)  																										# Création du fichier temporaire
+
+############ Profils  à exclure de la liste des environnements
+export rem001=imdeo
+export rem002=montages
+export rem003=prtg
+
+############ Création du fichier avec la liste des environnements présents
+cd /home || exit
+for env00 in *; do
+	echo "$env00" >> "$var25052101"																							# Alimentation du fichier avec la liste des environnements du système
+done
+
+############ Suppression des environnements exclus
+sed -i "/$rem001/d" "$var25052101"
+sed -i "/$rem002/d" "$var25052101"
+sed -i "/$rem003/d" "$var25052101"
+
+############ Les variables
+export selection="(◕_◕)"
+export var25042301="(°_°)"
+
+export var24051101
+var24051101=$(date +%y%m%d)																									# Variable date année-mois-jour
+
+
+# Variables couleurs --- Pour faire sympa --- Oh la belle bleue !
+export red="\033[31m"																										# Rouge
+export turquoise="\033[36m"																									# Turquoise
+export gras="\033[1m"																										# Gras
+export rougegras="\033[1;31m"																								# Rouge Gras
+export reset="\033[0m"																										# Réinitialisation
+
+############ Création de la liste des environnements présents
+cd ~ || exit
+node_list=()
+for f in $(<"$var25052101"); do
+	node_list[${#node_list[@]}]=$f
+	node_list[${#node_list[@]}]=""
+done
