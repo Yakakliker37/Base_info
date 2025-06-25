@@ -1,0 +1,20 @@
+############ Démarrage de tous les environnements ###############
+fct004() {
+	clear
+	# Utilisation du fichier $var25052101 pour le démarrage des environnements
+	cd ~ || exit
+	for ligne in $(<"$var25052101"); do
+		echo -e "${turquoise}" $var25042301 Démarrage de "$ligne". "${reset}"												# Affichage de la session de démarrage
+		export var25042403=/etc/init.d/$ligne.sh																			# Initialisation de la variable de commande
+		if [ -e "$var25042403" ]; then
+			chmod +x "$var25042403"																							# On rend exécutable le script de démarrage
+			$var25042403 start																								# Commande de démarrage de l'environnement
+			echo "$var25042403" start																						# Affichage de la commande pour information
+		else
+			echo -e "${rougegras}" $var25042301 Le script "$var25042403" n"'"existe pas. "${reset}" 						# Message d'erreur si le script de démarrage n'existe pas
+		fi
+		echo "----------"
+		sleep 10
+	done
+		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
+}
