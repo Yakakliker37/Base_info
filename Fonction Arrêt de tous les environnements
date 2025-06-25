@@ -1,0 +1,20 @@
+############ Arrêt de tous les environnements ###############
+fct005() {
+	clear
+	# Utilisation du fichier $var25052101 pour l'arrêt des environnements
+	cd ~ || exit
+	for ligne in $(<"$var25052101"); do
+		echo -e "${turquoise}" $var25042301 Arrêt de "$ligne". "${reset}"													# Affichage de la session d'arrêt
+		export var25042404=/etc/init.d/$ligne.sh																			# Initialisation de la variable de commande
+		if [ -e "$var25042404" ]; then
+			chmod +x "$var25042404"																							# On rend exécutable le script d'arrêt
+			$var25042404 stop																								# Commande d'arrêt de l'environnement
+			echo "$var25042404" stop																						# Affichage de la commande pour information
+		else
+			echo -e "${rougegras}" $var25042301 Le script "$var25042404" n"'"existe pas. "${reset}"							# Message d'erreur si le script d'arrêt n'existe pas
+		fi
+		echo "----------"
+		sleep 10
+	done
+		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
+}
