@@ -1,0 +1,16 @@
+##########################################################
+	# Création du lien Java
+fct107() {
+
+	var25052203=$(whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)										# Initialisation de la variable du JDK
+	cd /usr/java || exit
+
+		if [ -d "$var25052203" ]; then																						# Vérification de la présence du JDK
+			#echo "Le dossier $var25052203 existe."
+			ln -s "$var25052203" java-"$var25051201"																		# Création du lien JDK
+		else
+			#echo "La version $var25052203 n'est pas présente sur le serveur. "
+			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   						# Message d'alerte concernant le JDK
+		fi
+
+}
