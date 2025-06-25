@@ -1,0 +1,38 @@
+
+
+###########################################################
+	# Création de l' arborescence Springboot	
+fct100() {
+	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Springboot ?" 8 78); then										# Création de l'arborescence Springboot ? OUI/NON
+	mkdir /home/$var25051201/deploy-logs
+	mkdir /home/$var25051201/logs-apache
+	mkdir /home/$var25051201/www
+	mkdir -p /home/$var25051201/applis/api/conf/backup
+	mkdir -p /home/$var25051201/applis/api/logs
+	mkdir -p /home/$var25051201/applis/api/scripts
+	chown -R $var25051201: /home/$var25051201
+
+	# Création du script init
+		if (whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
+		fct103
+		fi
+
+	# Configuration Apache
+		if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
+		fct105											# Création du fichier vierge date-environnement.conf
+		fi
+
+	# Création du fichier logrotate dans /etc/apache2/logrotate
+		if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
+		fct106
+		fi
+
+		if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
+		fct107
+		fi
+	
+	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
+	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
+
+	fi
+}
