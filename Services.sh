@@ -10,7 +10,7 @@
 
 ############ Actions préalables
 cd ~ || exit
-export var2505210
+export var25052101
 var25052101=$(mktemp)  																										# Création du fichier temporaire
 
 ############ Profils  à exclure de la liste des environnements
@@ -241,7 +241,6 @@ fct100() {
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
 	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
-
 	fi
 }
 
@@ -255,7 +254,6 @@ fct101() {
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
 	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
-
 	fi
 }
 
@@ -280,7 +278,6 @@ fct102() {
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
 	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
-
 	fi
 }
 
@@ -336,9 +333,7 @@ fct104() {
 ##########################################################
 	# Création du fichier vierge Apache
 fct105() {
-
 		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf												# Création du fichier vierge date-environnement.conf
-
 }
 
 ##########################################################
@@ -358,7 +353,6 @@ fct106() {
 	copytruncate
 }
 EOF
-
 }
 
 ##########################################################
@@ -385,7 +379,7 @@ fct107() {
 ######## Menu de Gestion de Haproxy ########################
 fct996() {
 
-		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+		var25062502=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
 			"fct008" "    Démarrer le service Haproxy" \
 			"fct009" "    Stopper le service Haproxy" \
 			"fct010" "    Rechargement Haproxy" \
@@ -395,9 +389,7 @@ fct996() {
 
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
-
-			$OPTION																											# Lancement de la fonction choisie
-
+			$var25062502																											# Lancement de la fonction choisie
 		fi
 
 
@@ -405,7 +397,7 @@ fct996() {
 ######## Menu de Gestion des environnements ########################
 fct997() {
 
-		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+		var25062503=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
 			"fct001" "    Démarrer un environnement" \
 			"fct002" "    Stopper un environnement" \
 			"fct003" "    Logs d' un environnement" \
@@ -416,9 +408,7 @@ fct997() {
 
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
-
-			$OPTION																											# Lancement de la fonction choisie
-
+			$var25062503																											# Lancement de la fonction choisie
 		fi
 
 
@@ -448,7 +438,7 @@ if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then																		# Co
 	exitstatus=$?
 	if [ $exitstatus = 0 ]; then																							# Choix de l'action à effectuer
 
-		OPTION=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+		var25062504=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
 			"fct997" "    Gestion des environnements" \
 			"fct006" "    Htop" \
 			"fct996" "    Gestion de Haproxy" \
@@ -456,9 +446,7 @@ if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then																		# Co
 
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
-
-			$OPTION																											# Lancement de la fonction choisie
-
+			$var25062504																											# Lancement de la fonction choisie
 		else
 			fct999
 		fi
