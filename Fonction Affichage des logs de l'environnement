@@ -1,0 +1,30 @@
+############ Affichage des logs de l'environnement ###############
+fct003() {
+	fct998
+	clear
+	#echo $var25052104
+
+	export var25052102=/home/$var25052104/tomcat/logs/catalina.out															# Log Catalina
+	export var25052105=/home/$var25052104/applis/api/logs/api.log															# Log api.log
+	export var25052103=/home/$var25052104/nohup.out																			# Log nohup
+
+	# On teste si le fichier log est présent et on l'affiche
+	if [ -e "$var25052102" ]; then
+		rm -f "$var25052101" 																								# Suppression du fichier temporaire
+		tail -f "$var25052102" 																								# Affichage du log
+	else
+		if [ -e "$var25052105" ]; then
+			rm -f "$var25052101" 																							# Suppression du fichier temporaire
+			tail -f "$var25052105" 																							# Affichage du log
+
+		else
+			if [ -e "$var25052103" ]; then
+				rm -f "$var25052101" 																						# Suppression du fichier temporaire
+				tail -f "$var25052103" 																						# Affichage du log
+			else
+				rm -f "$var25052101" 																						# Suppression du fichier temporaire
+				echo -e "${rougegras}" $var25042301 Impossible d"'"afficher les logs de "$var25052104". "${reset}" 			# Message d'erreur
+			fi
+		fi
+	fi
+}
