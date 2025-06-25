@@ -1,0 +1,19 @@
+##########################################################
+	# Création du fichier logrotate
+fct106() {
+
+		touch /etc/apache2/"$var25051201".cfg																				# Création du fichier vierge logrotate
+
+		echo "création du fichier logrotate"																				# Message d'information 
+		tee /etc/apache2/logrotate/"$var25051201".cfg <<EOF
+		/home/$var25051201/logs-apache/*.log {
+        daily
+        rotate 90
+        compress
+	delaycompress
+	missingok
+	copytruncate
+}
+EOF
+
+}
