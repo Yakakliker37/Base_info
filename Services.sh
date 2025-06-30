@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25062502
+# Version PRY-25063001
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -199,7 +199,18 @@ systemctl reload haproxy
 }
 ######## Vérification de la configuration Haproxy #########
 fct011(){
-haproxy -f /etc/haproxy/haproxy.cfg -c
+clear
+export var25062701
+var25062701=$(haproxy -f /etc/haproxy/haproxy.cfg -c 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+#if [ "$var25062701" = "Configuration file is valid" ]; then
+	whiptail --msgbox "(◕_◕) : Le fichier de configuration est valide !" --title "Fichier valide" 8 55
+	clear
+	else
+	whiptail --msgbox "$var25062701" --title "Fichier non valide" 30 150
+fi
+
 }
 ######## Statut du service Haproxy ########################
 fct012(){
@@ -227,7 +238,7 @@ fct100() {
 
 	# Configuration Apache
 		if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
-		fct105											# Création du fichier vierge date-environnement.conf
+		fct105																												# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
@@ -250,7 +261,30 @@ fct101() {
 	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Python ?" 8 78); then											# Création de l'arborescence Python ? OUI/NON
 	mkdir /home/$var25051201/deploy-logs
 	mkdir /home/$var25051201/www
+	mkdir /home/$var25051201/www/logs-gunicorn
 	chown -R $var25051201: /home/$var25051201
+	touch /etc/systemd/system/"$var25051201".service	
+
+	# Création du Service
+	echo "création du Service"																					# Message d'information
+	tee /etc/systemd/system/"$var25051201".service <<EOF
+[Unit]
+Description=Gunicorn instance to serve $var25051201
+After=network.target
+
+[Service]
+LogLevelMax=6
+User=$var25051201
+Group=$var25051201
+WorkingDirectory=/home/$var25051201/www
+Environment="PATH=/home/$var25051201/www"
+ExecStart=/home/$var25051201/.pyenv/versions/$var25051201-3.12.9/bin/gunicorn -w 4 -t 6000 -c gunicorn_3.12.9_conf.py 'app_main:app' --bind 127.0.0.1:8888
+
+[Install]
+WantedBy=default.target
+EOF
+
+	usermod -aG sudo $var25051201
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
 	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
@@ -268,7 +302,7 @@ fct102() {
 
 	# Configuration Apache
 		if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
-		fct105											# Création du fichier vierge date-environnement.conf
+		fct105																												# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
