@@ -78,12 +78,12 @@ fct001() {
 	fct998
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
-		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
-		chmod +x "$var25042401" 																							# On rend exécutable le script
-		$var25042401 start 																									# Démarrage de l'environnement
-		echo "$var25042401" start 																							# Affichage de la commande pour information
+		rm -f "$var25052101" 																												# Suppression du fichier temporaire	
+		chmod +x "$var25042401" 																											# On rend exécutable le script
+		$var25042401 start 																													# Démarrage de l'environnement
+		echo "$var25042401" start 																											# Affichage de la commande pour information
 	else
-		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"								# Message d'erreur si le script de démarrage n'existe pas
+		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"												# Message d'erreur si le script de démarrage n'existe pas
 		NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042401" n'existe pas. " --title "Fichier inexistant" 8 78
 
 	fi
@@ -94,12 +94,12 @@ fct002() {
 	fct998
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
-		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
-		chmod +x "$var25042401"																								# On rend exécutable le script
-		$var25042401 stop																									# Arrêt de l'environnement
-		echo "$var25042401" stop																							# Affichage de la commande pour information
+		rm -f "$var25052101" 																												# Suppression du fichier temporaire	
+		chmod +x "$var25042401"																												# On rend exécutable le script
+		$var25042401 stop																													# Arrêt de l'environnement
+		echo "$var25042401" stop																											# Affichage de la commande pour information
 	else
-		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"								# Message d'erreur si le script d'arrêt n'existe pas
+		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"												# Message d'erreur si le script d'arrêt n'existe pas
 		NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042401" n'existe pas. " --title "Fichier inexistant" 8 78
 
 	fi
@@ -111,26 +111,26 @@ fct003() {
 	clear
 	#echo $var25052104
 
-	export var25052102=/home/$var25052104/tomcat/logs/catalina.out															# Log Catalina
-	export var25052105=/home/$var25052104/applis/api/logs/api.log															# Log api.log
-	export var25052103=/home/$var25052104/nohup.out																			# Log nohup
+	export var25052102=/home/$var25052104/tomcat/logs/catalina.out																				# Log Catalina
+	export var25052105=/home/$var25052104/applis/api/logs/api.log																				# Log api.log
+	export var25052103=/home/$var25052104/nohup.out																								# Log nohup
 
 	# On teste si le fichier log est présent et on l'affiche
 	if [ -e "$var25052102" ]; then
-		rm -f "$var25052101" 																								# Suppression du fichier temporaire
-		tail -f "$var25052102" 																								# Affichage du log
+		rm -f "$var25052101" 																													# Suppression du fichier temporaire
+		tail -f "$var25052102" 																													# Affichage du log
 	else
 		if [ -e "$var25052105" ]; then
-			rm -f "$var25052101" 																							# Suppression du fichier temporaire
-			tail -f "$var25052105" 																							# Affichage du log
+			rm -f "$var25052101" 																												# Suppression du fichier temporaire
+			tail -f "$var25052105" 																												# Affichage du log
 
 		else
 			if [ -e "$var25052103" ]; then
-				rm -f "$var25052101" 																						# Suppression du fichier temporaire
-				tail -f "$var25052103" 																						# Affichage du log
+				rm -f "$var25052101" 																											# Suppression du fichier temporaire
+				tail -f "$var25052103" 																											# Affichage du log
 			else
-				rm -f "$var25052101" 																						# Suppression du fichier temporaire
-				echo -e "${rougegras}" $var25042301 Impossible d"'"afficher les logs de "$var25052104". "${reset}" 			# Message d'erreur
+				rm -f "$var25052101" 																											# Suppression du fichier temporaire
+				echo -e "${rougegras}" $var25042301 Impossible d"'"afficher les logs de "$var25052104". "${reset}" 								# Message d'erreur
 				NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Impossible d'afficher les logs de "$var25052104". " --title "Fichier inexistant" 8 78
 
 			fi
@@ -144,21 +144,21 @@ fct004() {
 	# Utilisation du fichier $var25052101 pour le démarrage des environnements
 	cd ~ || exit
 	for ligne in $(<"$var25052101"); do
-		echo -e "${turquoise}" $var25042301 Démarrage de "$ligne". "${reset}"												# Affichage de la session de démarrage
-		export var25042403=/etc/init.d/$ligne.sh																			# Initialisation de la variable de commande
+		echo -e "${turquoise}" $var25042301 Démarrage de "$ligne". "${reset}"																	# Affichage de la session de démarrage
+		export var25042403=/etc/init.d/$ligne.sh																								# Initialisation de la variable de commande
 		if [ -e "$var25042403" ]; then
-			chmod +x "$var25042403"																							# On rend exécutable le script de démarrage
-			$var25042403 start																								# Commande de démarrage de l'environnement
-			echo "$var25042403" start																						# Affichage de la commande pour information
+			chmod +x "$var25042403"																												# On rend exécutable le script de démarrage
+			$var25042403 start																													# Commande de démarrage de l'environnement
+			echo "$var25042403" start																											# Affichage de la commande pour information
 		else
-			echo -e "${rougegras}" $var25042301 Le script "$var25042403" n"'"existe pas. "${reset}" 						# Message d'erreur si le script de démarrage n'existe pas
+			echo -e "${rougegras}" $var25042301 Le script "$var25042403" n"'"existe pas. "${reset}" 											# Message d'erreur si le script de démarrage n'existe pas
 			NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042403" n'existe pas. " --title "Fichier inexistant" 8 78
 
 		fi
 		echo "----------"
 		sleep 10
 	done
-		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
+		rm -f "$var25052101" 																													# Suppression du fichier temporaire	
 }
 
 ############ Arrêt de tous les environnements ###############
@@ -167,27 +167,27 @@ fct005() {
 	# Utilisation du fichier $var25052101 pour l'arrêt des environnements
 	cd ~ || exit
 	for ligne in $(<"$var25052101"); do
-		echo -e "${turquoise}" $var25042301 Arrêt de "$ligne". "${reset}"													# Affichage de la session d'arrêt
-		export var25042404=/etc/init.d/$ligne.sh																			# Initialisation de la variable de commande
+		echo -e "${turquoise}" $var25042301 Arrêt de "$ligne". "${reset}"																		# Affichage de la session d'arrêt
+		export var25042404=/etc/init.d/$ligne.sh																								# Initialisation de la variable de commande
 		if [ -e "$var25042404" ]; then
-			chmod +x "$var25042404"																							# On rend exécutable le script d'arrêt
-			$var25042404 stop																								# Commande d'arrêt de l'environnement
-			echo "$var25042404" stop																						# Affichage de la commande pour information
+			chmod +x "$var25042404"																												# On rend exécutable le script d'arrêt
+			$var25042404 stop																													# Commande d'arrêt de l'environnement
+			echo "$var25042404" stop																											# Affichage de la commande pour information
 		else
-			echo -e "${rougegras}" $var25042301 Le script "$var25042404" n"'"existe pas. "${reset}"							# Message d'erreur si le script d'arrêt n'existe pas
+			echo -e "${rougegras}" $var25042301 Le script "$var25042404" n"'"existe pas. "${reset}"												# Message d'erreur si le script d'arrêt n'existe pas
 			NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042404" n'existe pas. " --title "Fichier inexistant" 8 78
 
 		fi
 		echo "----------"
 		sleep 10
 	done
-		rm -f "$var25052101" 																								# Suppression du fichier temporaire	
+		rm -f "$var25052101" 																													# Suppression du fichier temporaire	
 }
 
 ############ Htop ###############
 fct006() {
-	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
-	htop																													# Commande htop pour affichage des processus
+	rm -f "$var25052101" 																														# Suppression du fichier temporaire	
+	htop																																		# Commande htop pour affichage des processus
 }
 
 ############ Création de l'environnement ###############
@@ -208,7 +208,7 @@ fct007() {
 
 		exitstatus=$?
 		if [ $exitstatus = 0 ]; then
-			$var25062401																									# Lancement de la fonction choisie
+			$var25062401																														# Lancement de la fonction choisie
 		fi	
 }
 
@@ -262,14 +262,14 @@ fct100() {
 	mkdir -p /home/$var25051201/applis/api/scripts
 	chown -R $var25051201: /home/$var25051201
 
-	# Création du script init
-		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
+		# Création du script init
+			if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
 		fct103
 		fi
 
 	# Configuration Apache
-		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
-		fct105																												# Création du fichier vierge date-environnement.conf
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then												# Création du fichier de configuration Apache ? OUI/NON
+		fct105																																	# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
@@ -277,11 +277,11 @@ fct100() {
 		fct106
 		fi
 
-		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then														# Création du lien JDK ? OUI/NON
 		fct107
 		fi
 	
-	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
+	rm -f "$var25052101" 																														# Suppression du fichier temporaire	
 		NEWT_COLORS=$info whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
 	fi
 }
@@ -297,7 +297,7 @@ fct101() {
 	touch /etc/systemd/system/"$var25051201".service	
 
 	# Création du Service
-	echo "création du Service"																								# Message d'information
+	echo "création du Service"																													# Message d'information
 	tee /etc/systemd/system/"$var25051201".service <<EOF
 [Unit]
 Description=Gunicorn instance to serve $var25051201
@@ -438,8 +438,36 @@ fct107() {
 }
 
 ##########################################################
+	# Installation des utilitaires Linux
+fct200() {
+
+	apt-get install build-essential linux-headers-$(uname -r)
+	apt-get install net-tools htop curl dos2unix tcpdump git
+	
+	NEWT_COLORS=$info whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin d'installation des utilitaires Linux
+
+}
+
+
+##########################################################
 ###########################################################################
 ## Les Interfaces graphiques
+fct994() {
+############# Gestion de Linux ############################
+	var25070101=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct200" "    Installation des utilitaires Linux" \
+			"fct006" "    Htop" \
+			3>&1 1>&2 2>&3)
+			
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+			$var25070101																											# Lancement de la fonction choisie
+		else
+			fct995
+		fi
+
+}
+
 fct995() {
 ############# Sélection de l'action à exécuter ############################
 
@@ -447,6 +475,7 @@ fct995() {
 			"fct997" "    Gestion des environnements" \
 			"fct006" "    Htop" \
 			"fct996" "    Gestion de Haproxy" \
+			"fct994" "    Gestion de Linux" \
 			3>&1 1>&2 2>&3)
 
 		exitstatus=$?
@@ -505,7 +534,7 @@ fct999() {
 	echo "(◕_◕) : That's all folks !"																						# Information de fin d'exécution du script
 }
 
-#### The Software ! ####
+#### The Ultimate Software ! ####
 
 fct995
 
