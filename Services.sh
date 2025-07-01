@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25063001
+# Version PRY-25070102
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -42,8 +42,25 @@ export red="\033[31m"																										# Rouge
 export turquoise="\033[36m"																									# Turquoise
 export gras="\033[1m"																										# Gras
 export rougegras="\033[1;31m"																								# Rouge Gras
-export reset="\033[0m"																										# Réinitialisation
+export reset="\033[0m"	
 
+export alert=(
+		root=,red
+		window=,white
+		border=black,white
+		textbox=black,white
+		button=red,white
+	)
+
+export info=(
+		root=,blue
+		window=,white
+		border=black,white
+		textbox=black,white
+		button=red,white
+	)
+
+	
 ############ Création de la liste des environnements présents
 cd ~ || exit
 node_list=()
@@ -67,6 +84,8 @@ fct001() {
 		echo "$var25042401" start 																							# Affichage de la commande pour information
 	else
 		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"								# Message d'erreur si le script de démarrage n'existe pas
+		NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042401" n'existe pas. " --title "Fichier inexistant" 8 78
+
 	fi
 }
 
@@ -81,6 +100,8 @@ fct002() {
 		echo "$var25042401" stop																							# Affichage de la commande pour information
 	else
 		echo -e "${rougegras}" $var25042301 Le script "$var25042401" n"'"existe pas. "${reset}"								# Message d'erreur si le script d'arrêt n'existe pas
+		NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042401" n'existe pas. " --title "Fichier inexistant" 8 78
+
 	fi
 }
 
@@ -110,6 +131,8 @@ fct003() {
 			else
 				rm -f "$var25052101" 																						# Suppression du fichier temporaire
 				echo -e "${rougegras}" $var25042301 Impossible d"'"afficher les logs de "$var25052104". "${reset}" 			# Message d'erreur
+				NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Impossible d'afficher les logs de "$var25052104". " --title "Fichier inexistant" 8 78
+
 			fi
 		fi
 	fi
@@ -129,6 +152,8 @@ fct004() {
 			echo "$var25042403" start																						# Affichage de la commande pour information
 		else
 			echo -e "${rougegras}" $var25042301 Le script "$var25042403" n"'"existe pas. "${reset}" 						# Message d'erreur si le script de démarrage n'existe pas
+			NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042403" n'existe pas. " --title "Fichier inexistant" 8 78
+
 		fi
 		echo "----------"
 		sleep 10
@@ -150,6 +175,8 @@ fct005() {
 			echo "$var25042404" stop																						# Affichage de la commande pour information
 		else
 			echo -e "${rougegras}" $var25042301 Le script "$var25042404" n"'"existe pas. "${reset}"							# Message d'erreur si le script d'arrêt n'existe pas
+			NEWT_COLORS=$alert whiptail --msgbox ""$var25042301" Le script "$var25042404" n'existe pas. " --title "Fichier inexistant" 8 78
+
 		fi
 		echo "----------"
 		sleep 10
@@ -167,13 +194,13 @@ fct006() {
 fct007() {
 	cd / || exit
 
-	var25051201=$(whiptail --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)								# Initialisation de la variable d'environnement 
+	var25051201=$(NEWT_COLORS=$info whiptail --inputbox "Entrez le nom de l'environnement" 10 60 3>&1 1>&2 2>&3)								# Initialisation de la variable d'environnement 
 
 		fct104
 
 	# Type d'environnement
 
-		var25062401=$(whiptail --menu "(◕_◕) : Sélection du type d'environnement ?" 25 60 15 \
+		var25062401=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Sélection du type d'environnement ?" 25 60 15 \
 			"fct100" "    Springboot" \
 			"fct101" "    Python" \
 			"fct102" "    Node JS" \
@@ -187,15 +214,18 @@ fct007() {
 
 ######## Démarrage du service Haproxy #####################
 fct008(){
-systemctl start haproxy
+	systemctl start haproxy
+	fct996
 }
 ######## Arrêt du service Haproxy #########################
 fct009(){
-systemctl stop haproxy
+	systemctl stop haproxy
+	fct996
 }
 ######## Rechargement de la configuration Haproxy #########
 fct010(){
-systemctl reload haproxy
+	systemctl reload haproxy
+	fct996
 }
 ######## Vérification de la configuration Haproxy #########
 fct011(){
@@ -205,11 +235,12 @@ var25062701=$(haproxy -f /etc/haproxy/haproxy.cfg -c 3>&1 1>&2 2>&3)
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
 #if [ "$var25062701" = "Configuration file is valid" ]; then
-	whiptail --msgbox "(◕_◕) : Le fichier de configuration est valide !" --title "Fichier valide" 8 55
+	NEWT_COLORS=$info whiptail --msgbox "(◕_◕) : Le fichier de configuration est valide !" --title "Fichier valide" 8 55
 	clear
 	else
-	whiptail --msgbox "$var25062701" --title "Fichier non valide" 30 150
+	NEWT_COLORS=$alert whiptail --msgbox "$var25062701" --title "Fichier non valide" 30 150
 fi
+fct996
 
 }
 ######## Statut du service Haproxy ########################
@@ -222,7 +253,7 @@ hatop -s /var/run/haproxy/admin.sock
 ###########################################################
 	# Création de l' arborescence Springboot	
 fct100() {
-	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Springboot ?" 8 78); then										# Création de l'arborescence Springboot ? OUI/NON
+	if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création de l'arborescence Springboot ?" 8 78); then										# Création de l'arborescence Springboot ? OUI/NON
 	mkdir /home/$var25051201/deploy-logs
 	mkdir /home/$var25051201/logs-apache
 	mkdir /home/$var25051201/www
@@ -232,33 +263,33 @@ fct100() {
 	chown -R $var25051201: /home/$var25051201
 
 	# Création du script init
-		if (whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du script init ?" 8 78); then												# Création du script de démarrage ? OUI/NON
 		fct103
 		fi
 
 	# Configuration Apache
-		if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
 		fct105																												# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
-		if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
 		fct106
 		fi
 
-		if (whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création lien Java ?" 8 78); then													# Création du lien JDK ? OUI/NON
 		fct107
 		fi
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
-	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
+		NEWT_COLORS=$info whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
 	fi
 }
 
 ###########################################################
 	# Création de l' arborescence Python	
 fct101() {
-	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Python ?" 8 78); then											# Création de l'arborescence Python ? OUI/NON
+	if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création de l'arborescence Python ?" 8 78); then											# Création de l'arborescence Python ? OUI/NON
 	mkdir /home/$var25051201/deploy-logs
 	mkdir /home/$var25051201/www
 	mkdir /home/$var25051201/www/logs-gunicorn
@@ -266,7 +297,7 @@ fct101() {
 	touch /etc/systemd/system/"$var25051201".service	
 
 	# Création du Service
-	echo "création du Service"																					# Message d'information
+	echo "création du Service"																								# Message d'information
 	tee /etc/systemd/system/"$var25051201".service <<EOF
 [Unit]
 Description=Gunicorn instance to serve $var25051201
@@ -287,31 +318,31 @@ EOF
 	usermod -aG sudo $var25051201
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
-	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
+		NEWT_COLORS=$info whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
 	fi
 }
 
 ##########################################################
 	# Création de l' arborescence Node JS	
 fct102() {
-	if (whiptail --yesno "(◕_◕) : Création de l'arborescence Node JS ?" 8 78); then										# Création de l'arborescence Node JS ? OUI/NON
+	if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création de l'arborescence Node JS ?" 8 78); then										# Création de l'arborescence Node JS ? OUI/NON
 	mkdir /home/$var25051201/deploy-logs
 	mkdir /home/$var25051201/logs-apache
 	mkdir /home/$var25051201/www
 	chown -R $var25051201: /home/$var25051201
 
 	# Configuration Apache
-		if (whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier Apache ?" 8 78); then											# Création du fichier de configuration Apache ? OUI/NON
 		fct105																												# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
-		if (whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
+		if (NEWT_COLORS=$info whiptail --yesno "(◕_◕) : Création du fichier logrotate ?" 8 78); then											# Création du fichier logrotate ? OUI/NON
 		fct106
 		fi
 	
 	rm -f "$var25052101" 																									# Suppression du fichier temporaire	
-	whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
+		NEWT_COLORS=$info whiptail --msgbox "Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
 	fi
 }
 
@@ -393,7 +424,7 @@ EOF
 	# Création du lien Java
 fct107() {
 
-	var25052203=$(whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)										# Initialisation de la variable du JDK
+	var25052203=$(NEWT_COLORS=$info whiptail --inputbox "Entrez la version du JDK" 10 60 3>&1 1>&2 2>&3)										# Initialisation de la variable du JDK
 	cd /usr/java || exit
 
 		if [ -d "$var25052203" ]; then																						# Vérification de la présence du JDK
@@ -401,78 +432,18 @@ fct107() {
 			ln -s "$var25052203" java-"$var25051201"																		# Création du lien JDK
 		else
 			#echo "La version $var25052203 n'est pas présente sur le serveur. "
-			whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   						# Message d'alerte concernant le JDK
+			NEWT_COLORS=$alert whiptail --msgbox "La version $var25052203 n'est pas présente sur le serveur. " 10 60   						# Message d'alerte concernant le JDK
 		fi
 
 }
 
 ##########################################################
-
-
-
-######## Menu de Gestion de Haproxy ########################
-fct996() {
-
-		var25062502=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
-			"fct008" "    Démarrer le service Haproxy" \
-			"fct009" "    Stopper le service Haproxy" \
-			"fct010" "    Rechargement Haproxy" \
-			"fct011" "    Vérification de la configuration Haproxy" \
-			"fct012" "    Statut du service Haproxy" \
-			3>&1 1>&2 2>&3)
-
-		exitstatus=$?
-		if [ $exitstatus = 0 ]; then
-			$var25062502																											# Lancement de la fonction choisie
-		fi
-
-
-}
-######## Menu de Gestion des environnements ########################
-fct997() {
-
-		var25062503=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
-			"fct001" "    Démarrer un environnement" \
-			"fct002" "    Stopper un environnement" \
-			"fct003" "    Logs d' un environnement" \
-			"fct004" "    Démarrer tous les environnements" \
-			"fct005" "    Arrêter tous les environnements" \
-			"fct007" "    Création d'un environnement" \
-			3>&1 1>&2 2>&3)
-
-		exitstatus=$?
-		if [ $exitstatus = 0 ]; then
-			$var25062503																											# Lancement de la fonction choisie
-		fi
-
-
-}
-
-
-
-############# Choix de l'environnement ############################
-fct998() {
-	var25052104=$(whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)		# Initialisation de la variable d'environnement
-}
-
-############# Fin du script ############################
-fct999() {
-	rm -f "$var25052101"																									# Suppression du fichier temporaire
-	echo "(◕_◕) : That's all folks !"																						# Information de fin d'exécution du script
-}
-
-
-
 ###########################################################################
-## L'Interface graphique
-
+## Les Interfaces graphiques
+fct995() {
 ############# Sélection de l'action à exécuter ############################
-if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then																		# Continuer ? OUI/NON
 
-	exitstatus=$?
-	if [ $exitstatus = 0 ]; then																							# Choix de l'action à effectuer
-
-		var25062504=$(whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+		var25062504=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
 			"fct997" "    Gestion des environnements" \
 			"fct006" "    Htop" \
 			"fct996" "    Gestion de Haproxy" \
@@ -484,14 +455,58 @@ if (whiptail --yesno "(◕_◕) : Continuer ?" 8 78); then																		# Co
 		else
 			fct999
 		fi
-	#########################################################
-	else
-		fct999
-	fi
 #########################################################
-else
-	fct999
-fi
-#########################################################
+}
+######## Menu de Gestion de Haproxy ########################
+fct996() {
 
-## Fin du script
+		var25062502=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct008" "    Démarrer le service Haproxy" \
+			"fct009" "    Stopper le service Haproxy" \
+			"fct010" "    Rechargement Haproxy" \
+			"fct011" "    Vérification de la configuration Haproxy" \
+			"fct012" "    Statut du service Haproxy" \
+			3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+			$var25062502																											# Lancement de la fonction choisie
+		else
+			fct995
+		fi
+}
+######## Menu de Gestion des environnements ########################
+fct997() {
+
+		var25062503=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Que souhaitez vous faire ?" 25 60 15 \
+			"fct001" "    Démarrer un environnement" \
+			"fct002" "    Stopper un environnement" \
+			"fct003" "    Logs d' un environnement" \
+			"fct004" "    Démarrer tous les environnements" \
+			"fct005" "    Arrêter tous les environnements" \
+			"fct007" "    Création d'un environnement" \
+			3>&1 1>&2 2>&3)
+
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+			$var25062503																											# Lancement de la fonction choisie
+		else
+			fct995
+		fi
+}
+############# Choix de l'environnement ############################
+fct998() {
+	var25052104=$(NEWT_COLORS=$info whiptail --menu "(◕_◕) : Choisissez un environnement :" 30 60 20 "${node_list[@]}" 3>&1 1>&2 2>&3)		# Initialisation de la variable d'environnement
+}
+
+############# Fin du script ############################
+fct999() {
+	rm -f "$var25052101"																									# Suppression du fichier temporaire
+	echo "(◕_◕) : That's all folks !"																						# Information de fin d'exécution du script
+}
+
+#### The Software ! ####
+
+fct995
+
+## That's all
