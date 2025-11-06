@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25071101
+# Version PRY-25110501
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -81,7 +81,7 @@ fct001() {
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
 		rm -f "$var25052101" 																																		# Suppression du fichier temporaire	
-		chmod +x "$var25042401" 																																	# On rend exécutable le script
+		chmod +x "$var25042401" 																																	# On rend exécutable le script (au cas ou il ne le serait pas)
 		$var25042401 start 																																			# Démarrage de l'environnement
 		echo "$var25042401" start 																																	# Affichage de la commande pour information
 	else
@@ -99,7 +99,7 @@ fct002() {
 	export var25042401=/etc/init.d/$var25052104.sh
 	if [ -e "$var25042401" ]; then
 		rm -f "$var25052101" 																																		# Suppression du fichier temporaire	
-		chmod +x "$var25042401"																																		# On rend exécutable le script
+		chmod +x "$var25042401"																																		# On rend exécutable le script (au cas ou il ne le serait pas)
 		$var25042401 stop																																			# Arrêt de l'environnement
 		echo "$var25042401" stop																																	# Affichage de la commande pour information
 	else
@@ -155,7 +155,7 @@ fct004() {
 		echo -e "${turquoise}" $var25042301 Démarrage de "$ligne". "${reset}"																						# Affichage de la session de démarrage
 		export var25042403=/etc/init.d/$ligne.sh																													# Initialisation de la variable de commande
 		if [ -e "$var25042403" ]; then
-			chmod +x "$var25042403"																																	# On rend exécutable le script de démarrage
+			chmod +x "$var25042403"																																	# On rend exécutable le script de démarrage (au cas ou il ne le serait pas)
 			$var25042403 start																																		# Commande de démarrage de l'environnement
 			echo "$var25042403" start																																# Affichage de la commande pour information
 		else
@@ -179,7 +179,7 @@ fct005() {
 		echo -e "${turquoise}" $var25042301 Arrêt de "$ligne". "${reset}"																							# Affichage de la session d'arrêt
 		export var25042404=/etc/init.d/$ligne.sh																													# Initialisation de la variable de commande
 		if [ -e "$var25042404" ]; then
-			chmod +x "$var25042404"																																	# On rend exécutable le script d'arrêt
+			chmod +x "$var25042404"																																	# On rend exécutable le script d'arrêt (au cas ou il ne le serait pas)
 			$var25042404 stop																																		# Commande d'arrêt de l'environnement
 			echo "$var25042404" stop																																# Affichage de la commande pour information
 		else
@@ -226,29 +226,29 @@ fct007() {
 fct008(){
 ######## Démarrage du service Haproxy #####################
 
-	systemctl start haproxy
-	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Démarrage du service Haproxy effectué." 10 60 															# Message d'information de fin d'installation des utilitaires Linux	
+	systemctl start haproxy																																			# Demarrage de Haproxy
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Démarrage du service Haproxy effectué." 10 60 															# Message d'information 
 	fct996
 }
 fct009(){
 ######## Arrêt du service Haproxy #########################
 
-	systemctl stop haproxy
-	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Arrêt du service Haproxy effectué." 10 60 																# Message d'information de fin d'installation des utilitaires Linux		
+	systemctl stop haproxy																																			# Arrêt de Haproxy
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Arrêt du service Haproxy effectué." 10 60 																# Message d'information 	
 	fct996
 }
 fct010(){
 ######## Rechargement de la configuration Haproxy #########
 
-	systemctl reload haproxy
-	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Rechargement de la configuration Haproxy effectué." 10 60 												# Message d'information de fin d'installation des utilitaires Linux		
+	systemctl reload haproxy																																		# Rechargement de Haproxy
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Rechargement de la configuration Haproxy effectué." 10 60 												# Message d'information 		
 	fct996
 }
 fct011(){
 ######## Vérification de la configuration Haproxy #########
 
 clear
-export var25062701
+export var25062701																																					# Verification de la configuration Haproxy
 var25062701=$(haproxy -f /etc/haproxy/haproxy.cfg -c 3>&1 1>&2 2>&3)
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
@@ -264,13 +264,13 @@ fct996
 fct012(){
 ######## Statut du service Haproxy ########################
 
-	hatop -s /var/run/haproxy/admin.sock
+	hatop -s /var/run/haproxy/admin.sock																															# Statut du service Haproxy
 }
 
 fct013(){
-######## Statut du service Haproxy ########################
+######## Installation du service Haproxy ########################
 
-	apt-get install haproxy hatop rsyslog socat
+	apt-get install haproxy hatop rsyslog socat																														# Installation de Haproxy
 }
 
 
@@ -342,14 +342,52 @@ User=$var25051201
 Group=$var25051201
 WorkingDirectory=/home/$var25051201/www
 Environment="PATH=/home/$var25051201/www"
+EnvironmentFile=/home/$var25051201/www/gunicorn_3.12.9_conf.py
 ExecStart=/home/$var25051201/.pyenv/versions/$var25051201-3.12.9/bin/gunicorn -w 4 -t 6000 -c gunicorn_3.12.9_conf.py 'app_main:app' --bind 127.0.0.1:8888
 
 [Install]
 WantedBy=default.target
 EOF
 
-	usermod -aG sudo "$var25051201"
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Service "$var25051201".service créé." 10 60 																# Message d'information 	
+
+
+##################################################
+# Création de l'environnement virtuel
+##################################################
+
+	var25110601=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version de python à installer" 10 60 3>&1 1>&2 2>&3)								# Initialisation de la variable d'environnement 
+	var25110602=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Nom de l'environnement virtuel" 10 60 3>&1 1>&2 2>&3)
+
+
+su - "$var25051201" -c 'curl https://pyenv.run | bash'
+
+cat <<EOF >> /home/"$var25051201"/.bashrc
+export PATH="~/.pyenv/bin:\$PATH"
+eval "\$(pyenv init -)"
+eval "\$(pyenv virtualenv-init -)"
+
+EOF
+
+
+sudo -i -u $var25051201 bash <<EOF
+    # Charger pyenv dans l'environnement de l'utilisateur
+    export PYENV_ROOT="\$HOME/.pyenv"
+    export PATH="\$PYENV_ROOT/bin:\$PATH"
+    eval "\$(pyenv init --path)"
+    eval "\$(pyenv init -)"
 	
+	
+    pyenv install "$var25110601"
+	
+	pyenv virtualenv $var25110601 $var25110602
+	
+EOF
+
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Python-$var25110601 installé, environnement virtuel $var25110602 créé." 10 80 																# Message d'information 	
+
+
+###################################################	
 	rm -f "$var25052101" 																																			# Suppression du fichier temporaire	
 		NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Création de l'environnement terminée." 10 60 														# Message d'information de fin de création de l'environnement
 	fi
@@ -367,7 +405,7 @@ fct102() {
 
 	# Configuration Apache
 		if (NEWT_COLORS=${info[*]} whiptail --yesno "$var25070203 : Création du fichier Apache ?" 8 78); then														# Création du fichier de configuration Apache ? OUI/NON
-		fct105																																						# Création du fichier vierge date-environnement.conf
+		fct108																																						# Création du fichier vierge date-environnement.conf
 		fi
 
 	# Création du fichier logrotate dans /etc/apache2/logrotate
@@ -382,7 +420,7 @@ fct102() {
 
 ##########################################################
 fct103() {
-	# Création du fichier init
+	# Création du fichier init Springboot
 
 		touch /etc/init.d/"$var25051201".sh																															# Création du fichier vierge "environnement.sh"
 		chmod +x /etc/init.d/"$var25051201".sh																														# On rend exécutable le script
@@ -428,13 +466,14 @@ fct104() {
 
 	echo "$var25051201"																																				# Affichage du nom de l'environnement
 	useradd -s /bin/bash -m "$var25051201"																															# Commande de création de l'environnement
+	usermod -aG sudo "$var25051201"
 	passwd "$var25051201"	# Définition du mot de passe de l'environnement
 	chmod 755 /home/"$var25051201"
 }
 
 ##########################################################
 fct105() {
-	# Création du fichier vierge Apache
+	# Création du fichier vierge Apache Springboot
 
 		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf																						# Création du fichier vierge date-environnement.conf
 
@@ -464,7 +503,7 @@ fct105() {
 fct106() {
 	# Création du fichier logrotate
 
-		touch /etc/apache2/"$var25051201".cfg																														# Création du fichier vierge logrotate
+		touch /etc/apache2/logrotate/"$var25051201".cfg																												# Création du fichier vierge logrotate
 
 		echo "création du fichier logrotate"																														# Message d'information 
 		tee /etc/apache2/logrotate/"$var25051201".cfg <<EOF
@@ -497,12 +536,39 @@ fct107() {
 }
 
 ##########################################################
+fct108() {
+	# Création du fichier vierge Apache Node JS
+
+		touch /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf																						# Création du fichier vierge date-environnement.conf
+
+
+############# Gestion d'Apache ############################
+
+		var25070302=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : URL ? ( URL.integration.groupeherve.com )" 10 60 3>&1 1>&2 2>&3)					# Initialisation de la variable du JDK
+
+
+		var25070304=$(NEWT_COLORS=${info[*]} whiptail --menu "$var25070203 : Type d'environnement ?" 25 60 15 \
+			"fct404" "    Integration" \
+			"fct405" "    Recette" \
+			"fct406" "    Production" \
+			3>&1 1>&2 2>&3)
+			
+		exitstatus=$?
+		if [ $exitstatus = 0 ]; then
+			$var25070304																																			# Lancement de la fonction choisie
+		fi
+
+}
+
+
+
+##########################################################
 fct200() {
 	# Installation des utilitaires Linux
 
 	apt-get update
 	apt-get install build-essential linux-headers-"$(uname -r)"
-	apt-get install net-tools htop curl dos2unix tcpdump git shellcheck rsync -y
+	apt-get install net-tools htop curl dos2unix tcpdump git shellcheck rsync cifs-utils nfs-common iftop -y
 	
 	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Installation des utilitaires terminée." 10 60 															# Message d'information de fin d'installation des utilitaires Linux
 
@@ -531,14 +597,14 @@ fct301() {
 	# application de la configuration Apache
 
 	apachectl graceful
-	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Rechargement de la configuration Apache effectuée." 10 60 												# Message d'information de fin d'installation des utilitaires Linux
+	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Rechargement de la configuration Apache effectuée." 10 60 												# Message d'information 
 	fct993
 	
 }
 
 ##########################################################
 fct401() {
-	# Configuration Apache Integration
+	# Configuration Apache Springboot Integration
 
 	# Création du fichier environnement.conf
 	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
@@ -643,7 +709,7 @@ EOF
 
 ##########################################################
 fct402() {
-	# Configuration Apache Recette
+	# Configuration Apache Springboot Recette
 
 	# Création du fichier environnement.conf
 	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
@@ -748,29 +814,29 @@ EOF
 
 ##########################################################
 fct403() {
-	# Configuration Apache Production
+	# Configuration Apache Springboot Production
 
 	# Création du fichier environnement.conf
 	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
 	<VirtualHost *:80>
 
-			ServerName $var25070302.production.lan.groupeherve.com
+			ServerName $var25070302.lan.groupeherve.com
 
 			ErrorLog /home/$var25051201/logs-apache/error_lan_com.log
 			CustomLog /home/$var25051201/logs-apache/access_lan_com.log combined
 
-			Redirect permanent / https://$var25070302.production.lan.groupeherve.com/
+			Redirect permanent / https://$var25070302.lan.groupeherve.com/
 
 	</VirtualHost>
 
 	<VirtualHost *:80>
 
-			ServerName $var25070302.production.groupeherve.com
+			ServerName $var25070302.groupeherve.com
 
 			ErrorLog /home/$var25051201/logs-apache/error_com.log
 			CustomLog /home/$var25051201/logs-apache/access_com.log combined
 
-			Redirect permanent / https://$var25070302.production.groupeherve.com/
+			Redirect permanent / https://$var25070302.groupeherve.com/
 
 	</VirtualHost>
 
@@ -781,16 +847,16 @@ fct403() {
 			SSLEngine on
 			SSLHonorCipherOrder on
 
-			SSLCertificateFile    /etc/apache2/certifs/wildcard.production.lan.groupeherve.com/wildcard.production.lan.groupeherve.com.crt
-			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.production.lan.groupeherve.com/wildcard.production.lan.groupeherve.com.key
-			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.production.lan.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
+			SSLCertificateFile    /etc/apache2/certifs/wildcard.lan.groupeherve.com/wildcard.lan.groupeherve.com.crt
+			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.lan.groupeherve.com/wildcard.lan.groupeherve.com.key
+			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.lan.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
 
 			# configuration du SSL
 			SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"
 
 			SSLProtocol all -SSLv2 -SSLv3
 
-			ServerName $var25070302.production.lan.groupeherve.com
+			ServerName $var25070302.lan.groupeherve.com
 
 		DocumentRoot /home/$var25051201/applis
 
@@ -815,16 +881,16 @@ fct403() {
 			SSLEngine on
 			SSLHonorCipherOrder on
 
-			SSLCertificateFile    /etc/apache2/certifs/wildcard.production.groupeherve.com/wildcard.production.groupeherve.com.crt
-			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.production.groupeherve.com/wildcard.production.groupeherve.com.key
-			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.production.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
+			SSLCertificateFile    /etc/apache2/certifs/wildcard.groupeherve.com/wildcard.groupeherve.com.crt
+			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.groupeherve.com/wildcard.groupeherve.com.key
+			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
 
 			# configuration du SSL
 			SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"
 
 			SSLProtocol all -SSLv2 -SSLv3
 
-			ServerName $var25070302.production.groupeherve.com
+			ServerName $var25070302.groupeherve.com
 
 		DocumentRoot /home/$var25051201/applis
 
@@ -843,6 +909,179 @@ fct403() {
 			</Directory>
 
 	</VirtualHost>
+EOF
+
+# Création du lien dans /etc/apache2/sites-enabled
+	cd /etc/apache2/sites-enabled || exit
+	ln -s ../sites-available/"$var24051101"-"$var25051201".conf /etc/apache2/sites-enabled/"$var24051101"-"$var25051201".conf
+
+}
+
+##########################################################
+fct404() {
+	# Configuration Apache NODE JS Integration
+
+	# Création du fichier environnement.conf
+	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
+	<VirtualHost *:80>
+
+			ServerName $var25070302.integration.lan.groupeherve.com
+
+			RewriteEngine On
+			RewriteCond %{HTTPS} off
+			RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}
+
+
+	</VirtualHost>
+
+
+<IfModule mod_ssl.c>
+	<VirtualHost _default_:443>
+
+			SSLEngine on
+			SSLHonorCipherOrder on
+
+			SSLCertificateFile    /etc/apache2/certifs/wildcard.integration.lan.groupeherve.com/wildcard.integration.lan.groupeherve.com.crt
+			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.integration.lan.groupeherve.com/wildcard.integration.lan.groupeherve.com.key
+			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.integration.lan.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
+
+			# configuration du SSL
+			SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"
+
+			SSLProtocol all -SSLv2 -SSLv3
+
+			ServerName $var25070302.integration.lan.groupeherve.com
+
+		DocumentRoot /home/$var25051201/www
+
+			DirectoryIndex index.htm index.html default.htm default.html
+
+			ErrorLog /home/$var25051201/logs-apache/error_lan_com.log
+			CustomLog /home/$var25051201/logs-apache/access_lan_com.log combined
+
+
+			<Directory /home/$var25051201/www/>
+                AllowOverride All
+                Require all granted
+			</Directory>
+
+	</VirtualHost>
+</IfModule>
+
+EOF
+
+# Création du lien dans /etc/apache2/sites-enabled
+	cd /etc/apache2/sites-enabled || exit
+	ln -s ../sites-available/"$var24051101"-"$var25051201".conf /etc/apache2/sites-enabled/"$var24051101"-"$var25051201".conf
+
+}
+
+##########################################################
+fct405() {
+	# Configuration Apache NODE JS Recette
+
+	# Création du fichier environnement.conf
+	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
+	<VirtualHost *:80>
+
+			ServerName $var25070302.recette.lan.groupeherve.com
+
+			RewriteEngine On
+			RewriteCond %{HTTPS} off
+			RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}
+
+	</VirtualHost>
+
+
+
+	<VirtualHost *:443>
+
+			SSLEngine on
+			SSLHonorCipherOrder on
+
+			SSLCertificateFile    /etc/apache2/certifs/wildcard.recette.lan.groupeherve.com/wildcard.recette.lan.groupeherve.com.crt
+			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.recette.lan.groupeherve.com/wildcard.recette.lan.groupeherve.com.key
+			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.recette.lan.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
+
+			# configuration du SSL
+			SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"
+
+			SSLProtocol all -SSLv2 -SSLv3
+
+			ServerName $var25070302.recette.lan.groupeherve.com
+
+		DocumentRoot /home/$var25051201/www
+
+			DirectoryIndex index.htm index.html default.htm default.html
+
+			ErrorLog /home/$var25051201/logs-apache/error_lan_com.log
+			CustomLog /home/$var25051201/logs-apache/access_lan_com.log combined
+
+
+			<Directory /home/$var25051201/www/>
+                AllowOverride All
+                Require all granted
+			</Directory>
+
+	</VirtualHost>
+
+EOF
+
+# Création du lien dans /etc/apache2/sites-enabled
+	cd /etc/apache2/sites-enabled || exit
+	ln -s ../sites-available/"$var24051101"-"$var25051201".conf /etc/apache2/sites-enabled/"$var24051101"-"$var25051201".conf
+
+}
+
+##########################################################
+fct406() {
+	# Configuration Apache NODE JS Production
+
+	# Création du fichier environnement.conf
+	tee /etc/apache2/sites-available/"$var24051101"-"$var25051201".conf <<EOF
+	<VirtualHost *:80>
+
+			ServerName $var25070302.lan.groupeherve.com
+
+			RewriteEngine On
+			RewriteCond %{HTTPS} off
+			RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}
+
+	</VirtualHost>
+
+
+
+	<VirtualHost *:443>
+
+			SSLEngine on
+			SSLHonorCipherOrder on
+
+			SSLCertificateFile    /etc/apache2/certifs/wildcard.lan.groupeherve.com/wildcard.lan.groupeherve.com.crt
+			SSLCertificateKeyFile /etc/apache2/certifs/wildcard.lan.groupeherve.com/wildcard.lan.groupeherve.com.key
+			SSLCertificateChainFile  /etc/apache2/certifs/wildcard.lan.groupeherve.com/GandiRSADomainValidationSecureServerCA3.pem
+
+			# configuration du SSL
+			SSLCipherSuite "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS !RC4"
+
+			SSLProtocol all -SSLv2 -SSLv3
+
+			ServerName $var25070302.lan.groupeherve.com
+
+		DocumentRoot /home/$var25051201/www
+
+			DirectoryIndex index.htm index.html default.htm default.html
+
+			ErrorLog /home/$var25051201/logs-apache/error_lan_com.log
+			CustomLog /home/$var25051201/logs-apache/access_lan_com.log combined
+
+
+			<Directory /home/$var25051201/www/>
+                AllowOverride All
+                Require all granted
+			</Directory>
+
+	</VirtualHost>
+
 EOF
 
 # Création du lien dans /etc/apache2/sites-enabled
@@ -931,12 +1170,12 @@ fct997() {
 ######## Menu de Gestion des environnements ########################
 
 		var25062503=$(NEWT_COLORS=${info[*]} whiptail --menu "$var25070203 : Que souhaitez vous faire ?" 25 60 15 \
+			"fct007" "    Création d'un environnement" \
 			"fct001" "    Démarrer un environnement" \
 			"fct002" "    Stopper un environnement" \
 			"fct003" "    Logs d' un environnement" \
 			"fct004" "    Démarrer tous les environnements" \
 			"fct005" "    Arrêter tous les environnements" \
-			"fct007" "    Création d'un environnement" \
 			3>&1 1>&2 2>&3)
 
 		exitstatus=$?
