@@ -356,7 +356,7 @@ EOF
 # Création de l'environnement virtuel
 ##################################################
 
-	var25110601=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version de python à installer" 10 60 3>&1 1>&2 2>&3)								# Initialisation de la variable d'environnement 
+	var25110601=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version de python à installer" 10 60 3>&1 1>&2 2>&3)						
 	var25110602=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Nom de l'environnement virtuel" 10 60 3>&1 1>&2 2>&3)
 
 
@@ -376,7 +376,7 @@ sudo -i -u $var25051201 bash <<EOF
     export PATH="\$PYENV_ROOT/bin:\$PATH"
     eval "\$(pyenv init --path)"
     eval "\$(pyenv init -)"
-	
+	eval "\$(pyenv virtualenv-init -)"
 	
     pyenv install "$var25110601"
 	
