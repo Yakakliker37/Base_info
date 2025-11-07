@@ -1,5 +1,5 @@
 #!/bin/bash
-# Version PRY-25110501
+# Version PRY-251107
 #
 # Ce script liste les environnements présents sur le serveur
 # Il propose l'arrêt ou le démarrage de chacun des environnements ainsi que de tous les environnements
@@ -326,11 +326,20 @@ fct101() {
 	mkdir /home/"$var25051201"/deploy-logs
 	mkdir /home/"$var25051201"/www
 	mkdir /home/"$var25051201"/www/logs-gunicorn
-	chown -R "$var25051201": /home/"$var25051201"
 	touch /etc/systemd/system/"$var25051201".service
+	touch /home/"$var25051201"/www/gunicorn_conf.py	
+	touch /home/"$var25051201"/deploy.sh	
+
 
 	# Création du Service
-	echo "création du Service"																																		# Message d'information
+
+	var25110701=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Port Gunicorn" 10 60 3>&1 1>&2 2>&3)						
+	var25110702=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Nom de l'application (xxxx:app)" 10 60 3>&1 1>&2 2>&3)	
+	var25110601=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version de python à installer" 10 60 3>&1 1>&2 2>&3)						
+	var25110602=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Nom de l'environnement virtuel" 10 60 3>&1 1>&2 2>&3)
+	
+	
+	echo "création du Service"		# Message d'information
 	tee /etc/systemd/system/"$var25051201".service <<EOF
 [Unit]
 Description=Gunicorn instance to serve $var25051201
@@ -342,12 +351,100 @@ User=$var25051201
 Group=$var25051201
 WorkingDirectory=/home/$var25051201/www
 Environment="PATH=/home/$var25051201/www"
-EnvironmentFile=/home/$var25051201/www/gunicorn_3.12.9_conf.py
-ExecStart=/home/$var25051201/.pyenv/versions/$var25051201-3.12.9/bin/gunicorn -w 4 -t 6000 -c gunicorn_3.12.9_conf.py 'app_main:app' --bind 127.0.0.1:8888
+EnvironmentFile=/home/$var25051201/www/gunicorn_conf.py
+ExecStart=/home/$var25051201/.pyenv/versions/$var25110602/bin/gunicorn -w 4 -t 6000 -c gunicorn_conf.py '$var25110702:app' --bind 127.0.0.1:$var25110701
 
 [Install]
 WantedBy=default.target
 EOF
+
+	echo "Création du fichier conf Gunicorn"
+	tee /home/"$var25051201"/www/gunicorn_conf.py <<EOF
+# /path-to-your-project/gunicorn_conf.py
+bind = '127.0.0.1:$var25110701'
+worker_class = 'sync'
+loglevel = 'debug'
+accesslog = './logs-gunicorn/access_log_contrats'
+acceslogformat ="%(h)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s"
+errorlog =  './logs-gunicorn/error_log_contrats'
+app = '$var25110702:app'	
+EOF
+
+
+	echo "Création du script deploy.sh"
+	var25110603=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : PROJNAME ? (Variable deploy.sh) " 10 60 3>&1 1>&2 2>&3)
+	
+	tee /home/"$var25051201"/deploy.sh <<EOF
+#!/bin/bash
+
+##############################################################################################################
+
+# Script Python
+
+#################################
+# Variables génériques
+#################################
+export ver="251106"
+export vardate=\$(date +%y%m%d)
+export vartime=\$(date +%y%m%d%H%M)
+
+##########################
+# Variables de l'environnement
+##########################
+
+export VERSION=\$1
+export LIB=\$2
+export PROJNAME="$var25110603"
+export environnement="$var25110602"
+export repository="https://python-repo.lan.groupeherve.com/entreprise/release/"
+
+export PYENV_ROOT="\$HOME/.pyenv"
+export PATH="\$PYENV_ROOT/bin:\$PATH"
+eval "\$(pyenv init --path)"
+eval "\$(pyenv init -)"
+eval "\$(pyenv virtualenv-init -)"
+
+#############################
+# Fin des variables
+#############################
+###############################################################################################################
+
+#############################
+# Mise à jour
+#############################
+
+rm -rf deploy.log
+
+pyenv activate \$environnement 																							# On se connecte sur l'environnement virtuel
+
+pip uninstall \$PROJNAME -y 	
+
+
+if [[ "\$LIB" == Yes ]]
+then
+	pip freeze | xargs pip uninstall -y
+fi
+
+pip install --upgrade pip 																								# On upgrade pip si besoin
+pip install gunicorn 																									# On install Gunicorn si besoin (nouvelle installation) 
+pip install --index-url \$repository \$PROJNAME==\$VERSION >> deploy.log 													# On télécharge le package applicatif et on l'installe
+
+###########################
+#  Création des logs
+###########################
+
+echo ======"\$vartime"======= >> ~/deploy-logs/deploy-\$vardate.log
+cat deploy.log >> ~/deploy-logs/deploy-\$vardate.log
+
+echo "Installation terminée"
+
+EOF
+	
+
+
+	chown -R "$var25051201": /home/"$var25051201"
+	chmod +x /home/"$var25051201"/deploy.sh
+	systemctl daemon-reload
 
 	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Service "$var25051201".service créé." 10 60 																# Message d'information 	
 
@@ -355,9 +452,6 @@ EOF
 ##################################################
 # Création de l'environnement virtuel
 ##################################################
-
-	var25110601=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version de python à installer" 10 60 3>&1 1>&2 2>&3)						
-	var25110602=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Nom de l'environnement virtuel" 10 60 3>&1 1>&2 2>&3)
 
 
 su - "$var25051201" -c 'curl https://pyenv.run | bash'
@@ -382,10 +476,30 @@ sudo -i -u $var25051201 bash <<EOF
 	
 	pyenv virtualenv $var25110601 $var25110602
 	
+	pyenv activate $var25110602
+	
+	python -m pip install --upgrade pip
+	
+	pip install gunicorn
+	
+	pyenv deactivate
+	
 EOF
+
 
 	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Python-$var25110601 installé, environnement virtuel $var25110602 créé." 10 80 																# Message d'information 	
 
+
+		if (NEWT_COLORS=${info[*]} whiptail --yesno "$var25070203 : Téléchargement de l'application ?" 8 78); then			
+			var25110604=$(NEWT_COLORS=${info[*]} whiptail --inputbox "$var25070203 : Version : " 10 60 3>&1 1>&2 2>&3)
+
+sudo -i -u $var25051201 bash <<EOF
+./deploy.sh $var25110604
+EOF
+
+			NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Application $var25110603 installée" 10 80 																# Message d'information 	
+
+		fi
 
 ###################################################	
 	rm -f "$var25052101" 																																			# Suppression du fichier temporaire	
@@ -568,7 +682,7 @@ fct200() {
 
 	apt-get update
 	apt-get install build-essential linux-headers-"$(uname -r)"
-	apt-get install net-tools htop curl dos2unix tcpdump git shellcheck rsync cifs-utils nfs-common iftop -y
+	apt-get install net-tools htop curl dos2unix tcpdump git shellcheck rsync cifs-utils nfs-common iftop sudo -y
 	
 	NEWT_COLORS=${info[*]} whiptail --msgbox "$var25070203 : Installation des utilitaires terminée." 10 60 															# Message d'information de fin d'installation des utilitaires Linux
 
